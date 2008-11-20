@@ -54,7 +54,9 @@ public class Analysis extends Task {
 			parent = getProject().getBaseDir();
 		}
 
-		parent.mkdirs();
+		if(!parent.mkdirs()) {
+			System.err.println("Failed to create: " + parent.getAbsolutePath());
+		}
 		super.init();
 	}
 
@@ -104,7 +106,9 @@ public class Analysis extends Task {
 	}
 
 	public File createReportFileHandle(String name) {
-		parent.mkdirs();
+		if(!parent.mkdirs()) {
+			System.err.println("Failed to create: " + parent.getAbsolutePath());
+		}
 		File f = new File(parent, baseFilename + name);
 		return f;
 	}
