@@ -1,0 +1,47 @@
+<project name="Analysis" default="analyze">
+		
+	<target name="compile">
+		
+		<delete dir="bin" failonerror="false"/>
+		<delete file="analysis.jar" failonerror="false"/>
+		<mkdir dir="bin"/>
+		
+	    <javac srcdir="src" destdir="bin" debug="true"
+	         includes="**/*.java" classpathref="build.classpath">
+	    	<classpath>
+	    		  <path id="build.classpath">
+	    		       <fileset dir="libs">
+	    		          <include name="**/*.jar"/>
+	    		       </fileset>
+	    		    </path>
+	    	</classpath>
+		</javac>
+		
+		<copy todir="bin">
+			<fileset dir="src">
+			  <exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+		
+		<jar destfile="analysis.jar">
+		  <fileset dir="bin"/>
+		  <fileset dir="libs"/>
+		</jar>
+					
+	</target>
+	
+	<target name="analyze" depends="compile">
+	      <taskdef resource="staticanalysis.properties" classpath="analysis.jar"/>               
+	        <setupAnalysis jar="analysis.jar" quiet="true"/>
+	        
+	        <!-- add individual parts of the project to the batch -->
+	        <addAnalysisItem srcdir="src"  builddir="bin"/>
+	        <addAnalysisItem srcdir="test" builddir="bin"/>
+	        
+	        <!-- run the analysis -->
+	        <performStaticAnalysis  todir="reports" basename="report_" 
+	            checkstyleconfig="${basedir}/libs/checkstyle/checkstyle_checks.xml"
+	            pmdrulesets="rulesets/favorites.xml" jvmargs="-Xmx256m"/>
+	</target>
+	
+</project>
