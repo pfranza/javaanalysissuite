@@ -1,12 +1,17 @@
 <project name="Analysis" default="analyze">
 		
+	<property name="product.version" value="0.5b"/>
+	<property name="src.dir" value="${basedir}/src"/>
+	<property name="classes.dir" value="${basedir}/classes"/>
+	<property name="jar.name" value="jAnalysisSuite-${product.version}.jar" />
+	
 	<target name="compile">
 		
-		<delete dir="bin" failonerror="false"/>
-		<delete file="analysis.jar" failonerror="false"/>
-		<mkdir dir="bin"/>
+		<delete dir="${classes.dir}" failonerror="false"/>
+		<delete file="${jar.name}" failonerror="false"/>
+		<mkdir dir="${classes.dir}"/>
 		
-	    <javac srcdir="src" destdir="bin" debug="true"
+	    <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true"
 	         includes="**/*.java" classpathref="build.classpath">
 	    	<classpath>
 	    		  <path id="build.classpath">
@@ -17,26 +22,25 @@
 	    	</classpath>
 		</javac>
 		
-		<copy todir="bin">
-			<fileset dir="src">
+		<copy todir="${classes.dir}">
+			<fileset dir="${src.dir}">
 			  <exclude name="**/*.java"/>
 			</fileset>
 		</copy>
 		
-		<jar destfile="analysis.jar">
-		  <fileset dir="bin"/>
+		<jar destfile="${jar.name}">
+		  <fileset dir="${classes.dir}"/>
 		  <fileset dir="libs"/>
 		</jar>
 					
 	</target>
 	
 	<target name="analyze" depends="compile">
-	      <taskdef resource="staticanalysis.properties" classpath="analysis.jar"/>               
-	        <setupAnalysis jar="analysis.jar" quiet="true"/>
+	      <taskdef resource="staticanalysis.properties" classpath="${jar.name}"/>               
+	        <setupAnalysis jar="${jar.name}" quiet="true"/>
 	        
 	        <!-- add individual parts of the project to the batch -->
-	        <addAnalysisItem srcdir="src"  builddir="bin"/>
-	        <addAnalysisItem srcdir="test" builddir="bin"/>
+	        <addAnalysisItem srcdir="${src.dir}"  builddir="${classes.dir}"/>
 	        
 	        <!-- run the analysis -->
 	        <performStaticAnalysis  todir="reports" basename="report_" 
