@@ -109,7 +109,7 @@ public class Analysis extends Task {
 		return f;
 	}
 	
-	private static void createFolder(File f) {
+	public static void createFolder(File f) {
 		if(!f.exists()) {
 			if(!f.mkdirs()) {
 				System.err.println("Failed to create: " + f.getAbsolutePath());

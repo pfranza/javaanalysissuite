@@ -59,8 +59,8 @@ public class AnalysisDef extends Taskdef {
 		
 		File tempdir = new File(System.getProperty("java.io.tmpdir"));
 		File temp = new File(tempdir, "analysis");
-		temp.mkdir();
-		
+		Analysis.createFolder(temp);
+		boolean noTimeCompare = false;
 		JarFile jar = new JarFile(jarFile);
 		Enumeration<JarEntry> en = jar.entries();
 		while (en.hasMoreElements()) {
@@ -68,6 +68,7 @@ public class AnalysisDef extends Taskdef {
 			File f = new File(temp, file.getName());
 			if (file.isDirectory()) { // if its a directory, create it
 				f.mkdirs();
+				Analysis.createFolder(f);
 			} else {
 				print("\t\t" + file.getName()+ ":  ");
 				if(f.exists() && f.lastModified() == file.getTime() && f.length() == file.getSize()) {
@@ -80,12 +81,19 @@ public class AnalysisDef extends Taskdef {
 					}
 					fos.close();
 					is.close();
-					f.setLastModified(file.getTime());
+					if(!f.setLastModified(file.getTime())){
+						noTimeCompare = true;
+					}
 					println(" extracted.");
 				}
 			}
 		}
 		println("\n");
+		
+		if(noTimeCompare) {
+			System.out.println("Can't alter timestamps: this will cause unpack every run.");
+		}
+		
 		return temp;
 	}
 	
