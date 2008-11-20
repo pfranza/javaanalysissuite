@@ -67,7 +67,6 @@ public class AnalysisDef extends Taskdef {
 			JarEntry file = en.nextElement();
 			File f = new File(temp, file.getName());
 			if (file.isDirectory()) { // if its a directory, create it
-				f.mkdirs();
 				Analysis.createFolder(f);
 			} else {
 				print("\t\t" + file.getName()+ ":  ");
