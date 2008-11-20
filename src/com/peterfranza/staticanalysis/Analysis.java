@@ -54,9 +54,7 @@ public class Analysis extends Task {
 			parent = getProject().getBaseDir();
 		}
 
-		if(!parent.mkdirs()) {
-			System.err.println("Failed to create: " + parent.getAbsolutePath());
-		}
+		createFolder(parent);
 		super.init();
 	}
 
@@ -106,11 +104,17 @@ public class Analysis extends Task {
 	}
 
 	public File createReportFileHandle(String name) {
-		if(!parent.mkdirs()) {
-			System.err.println("Failed to create: " + parent.getAbsolutePath());
-		}
+		createFolder(parent);
 		File f = new File(parent, baseFilename + name);
 		return f;
+	}
+	
+	private static void createFolder(File f) {
+		if(!f.exists()) {
+			if(!f.mkdirs()) {
+				System.err.println("Failed to create: " + f.getAbsolutePath());
+			}	
+		}
 	}
 
 	@SuppressWarnings("unchecked")
