@@ -1,37 +1,45 @@
 package com.peterfranza.staticanalysis.tools;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
-import net.sourceforge.pmd.cpd.CPDTask;
-import net.sourceforge.pmd.cpd.CPDTask.FormatAttribute;
-
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.taskdefs.Execute;
+import org.apache.tools.ant.types.CommandlineJava;
 
 import com.peterfranza.staticanalysis.Analysis;
 import com.peterfranza.staticanalysis.AnalysisItem;
 
 public class CpdTool implements AnalysisToolInterface {
 
-	public void analyze(Analysis analysis, Project project,
+	public void analyze(final Analysis analysis, Project project,
 			List<AnalysisItem> items) {
 
-		CPDTask task = new CPDTask();
-		task.setProject(project);
-		task.setMinimumTokenCount(100);
-		task.setFormat(new FormatAttribute(){{
-			setValue("xml");
-		}});
+		CommandlineJava commandline = new CommandlineJava();
+			commandline.setClassname("com.peterfranza.staticanalysis.tools.tasks.CPDWrapper");
+			commandline.createClasspath(project).setLocation(new File("libs/pmd/pmd-4.2.4.jar"));
+			commandline.createClasspath(project).setLocation(analysis.getLibraryRoot());
+			commandline.createArgument().setFile(analysis.createReportFileHandle("cpd.xml"));
+			commandline.createArgument().setValue(analysis.getCpdMinTokens());
 
-		for(AnalysisItem item: items) {
-			FileSet fs = new FileSet();
-			fs.setDir(item.getSourceDirectory());
-			fs.setIncludes("**/*.java");		
-			task.addFileset(fs);
-		}
-		
-		task.setOutputFile(analysis.createReportFileHandle("cpd.xml"));
-		task.perform();
+			commandline.setMaxmemory(analysis.getMaxMem());
+			
+			for(AnalysisItem item: items) {
+				commandline.createArgument().setFile(item.getSourceDirectory());
+			}
+			
+			Execute exe = new Execute();
+			exe.setAntRun(project.createSubProject());
+			exe.setCommandline(commandline.getCommandline());
+			
+			try {
+				exe.execute();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
 	}
+	
 
 }
