@@ -113,7 +113,7 @@ public class Analysis extends Task {
 
 		initializeTools();
 		
-		long start = System.currentTimeMillis();
+		final long start = System.currentTimeMillis();
 
 		if (AnalysisItem.getAnalysisItems().isEmpty()) {
 			System.out.println("Nothing to analyize.");
@@ -128,7 +128,7 @@ public class Analysis extends Task {
 					.getAnalysisItems());
 		}
 
-		long end = System.currentTimeMillis();
+		final long end = System.currentTimeMillis();
 		System.out.println("Analysis took: " + ((end - start) / 1000)
 				+ " seconds.");
 
@@ -172,8 +172,7 @@ public class Analysis extends Task {
 	 */
 	public File createReportFileHandle(String name) {
 		createFolder(parent);
-		File f = new File(parent, baseFilename + name);
-		return f;
+		return new File(parent, baseFilename + name);
 	}
 	
 	/**
