@@ -34,19 +34,19 @@ public class AnalysisDef extends Taskdef {
 	public void execute() throws BuildException {
 
 		try {
-			File root = extractToTemp(jarFile);
+			final File root = extractToTemp(jarFile);
 
-			FileSet allJars = new FileSet();
+			final FileSet allJars = new FileSet();
 			allJars.setProject(getProject());
 			allJars.setDir(root);
 			allJars.setIncludes("**/*.jar");
 
-			Path p = new Path(getProject());
-			p.setProject(getProject());
-			p.addFileset(allJars);
-			p.createPathElement().setLocation(jarFile);
+			final Path path = new Path(getProject());
+			path.setProject(getProject());
+			path.addFileset(allJars);
+			path.createPathElement().setLocation(jarFile);
 
-			setClasspath(p);
+			setClasspath(path);
 
 			setResource("analysis.properties");
 			getProject().setNewProperty("analyzer.unpack_home",
@@ -94,15 +94,15 @@ public class AnalysisDef extends Taskdef {
 	 */
 	private File extractToTemp(File jarFile) throws IOException {
 
-		File tempdir = new File(System.getProperty("java.io.tmpdir"));
-		File temp = new File(tempdir, "analysis");
+		final File tempdir = new File(System.getProperty("java.io.tmpdir"));
+		final File temp = new File(tempdir, "analysis");
 		Analysis.createFolder(temp);
 		boolean noTimeCompare = false;
-		JarFile jar = new JarFile(jarFile);
-		Enumeration<JarEntry> en = jar.entries();
+		final JarFile jar = new JarFile(jarFile);
+		final Enumeration<JarEntry> en = jar.entries();
 		while (en.hasMoreElements()) {
-			JarEntry file = en.nextElement();
-			File f = new File(temp, file.getName());
+			final JarEntry file = en.nextElement();
+			final File f = new File(temp, file.getName());
 			if (file.isDirectory()) { // if its a directory, create it
 				Analysis.createFolder(f);
 			} else {
@@ -187,8 +187,8 @@ public class AnalysisDef extends Taskdef {
 	 */
 	private boolean writeFile(boolean noTimeCompare, JarFile jar,
 			JarEntry file, File f) throws IOException, FileNotFoundException {
-		InputStream is = jar.getInputStream(file); // get the input stream
-		FileOutputStream fos = new FileOutputStream(f);
+		final InputStream is = jar.getInputStream(file); // get the input stream
+		final FileOutputStream fos = new FileOutputStream(f);
 		while (is.available() > 0) {
 			fos.write(is.read());
 		}
