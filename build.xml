@@ -45,7 +45,7 @@
 	        <!-- run the analysis -->
 	        <performStaticAnalysis  todir="reports" basename="report_" 
 	            checkstyleconfig="${basedir}/libs/checkstyle/checkstyle_checks.xml"
-	            pmdrulesets="rulesets/favorites.xml" maxmem="256m" cpdmintokens="100"/>
+	            pmdrulesets="rulesets/favorites.xml" maxmem="256m" cpdmintokens="50"/>
 	</target>
 	
 </project>
