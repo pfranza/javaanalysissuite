@@ -19,7 +19,7 @@ public class FindBugsTool implements AnalysisToolInterface {
 	
 		task.setOutput("xml");
 		task.setOutputFile(analysis.createReportFileHandle("findbugs.xml").getAbsolutePath());
-		task.setJvmargs(analysis.getJvmArgs());
+		task.setJvmargs("-Xmx" + analysis.getMaxMem());
 		task.setTimeout(20 * 60 * 1000);
 		task.setEffort("min");
 		

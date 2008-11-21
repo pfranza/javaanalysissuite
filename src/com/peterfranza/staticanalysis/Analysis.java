@@ -35,8 +35,11 @@ public class Analysis extends Task {
 	/** The parent. */
 	private File parent;
 
-	/** The jvm args. */
-	private String jvmArgs;
+	/** The maxmem. */
+	private String maxmem = "256m";
+
+	/** The cpd min tokens. */
+	private String cpdMinTokens = "100";
 
 	/**
 	 * Sets the basename.
@@ -79,8 +82,8 @@ public class Analysis extends Task {
 	 * 
 	 * @param s the new jvmargs
 	 */
-	public void setJvmargs(String s) {
-		this.jvmArgs = s;
+	public void setMaxmem(String s) {
+		this.maxmem = s;
 	}
 
 	/**
@@ -88,8 +91,8 @@ public class Analysis extends Task {
 	 * 
 	 * @return the jvm args
 	 */
-	public String getJvmArgs() {
-		return jvmArgs;
+	public String getMaxMem() {
+		return maxmem;
 	}
 
 	/* (non-Javadoc)
@@ -200,6 +203,24 @@ public class Analysis extends Task {
 		} catch (Exception e) {
 			throw new BuildException(e);
 		}
+	}
+
+	/**
+	 * Gets the cpd min tokens.
+	 * 
+	 * @return the cpd min tokens
+	 */
+	public String getCpdMinTokens() {
+		return cpdMinTokens;
+	}
+	
+	/**
+	 * Sets the cpdmintokens.
+	 * 
+	 * @param c the new cpdmintokens
+	 */
+	public void setCpdmintokens(String c) {
+		cpdMinTokens = c;
 	}
 
 }
