@@ -13,7 +13,6 @@ import com.peterfranza.staticanalysis.tools.tasks.JDependTask.FormatAttribute;
 
 public class JDependTool implements AnalysisToolInterface {
 	
-	@SuppressWarnings("deprecation")
 	public void analyze(Analysis analysis, Project project, List<AnalysisItem> items) {
 		JDependTask task = new JDependTask();
 		task.setProject(project);
