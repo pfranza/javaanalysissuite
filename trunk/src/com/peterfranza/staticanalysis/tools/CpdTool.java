@@ -18,7 +18,7 @@ public class CpdTool implements AnalysisToolInterface {
 
 		CommandlineJava commandline = new CommandlineJava();
 			commandline.setClassname("com.peterfranza.staticanalysis.tools.tasks.CPDWrapper");
-			commandline.createClasspath(project).setLocation(new File("libs/pmd/pmd-4.2.4.jar"));
+			commandline.createClasspath(project).setLocation(new File(analysis.getLibraryRoot() + "/pmd/pmd-4.2.4.jar"));
 			commandline.createClasspath(project).setLocation(analysis.getLibraryRoot());
 			commandline.createArgument().setFile(analysis.createReportFileHandle("cpd.xml"));
 			commandline.createArgument().setValue(analysis.getCpdMinTokens());
