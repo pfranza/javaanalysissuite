@@ -14,11 +14,21 @@ import org.apache.tools.ant.taskdefs.Taskdef;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 
+
+/**
+ * The Class AnalysisDef.
+ */
 public class AnalysisDef extends Taskdef {
 
+	/** The jar file. */
 	private File jarFile;
+	
+	/** The quiet. */
 	private boolean quiet = true;
 
+	/* (non-Javadoc)
+	 * @see org.apache.tools.ant.taskdefs.Definer#execute()
+	 */
 	@Override
 	public void execute() throws BuildException {
 
@@ -48,6 +58,19 @@ public class AnalysisDef extends Taskdef {
 		super.execute();
 	}
 
+	/**
+	 * Extract file.
+	 * 
+	 * @param noTimeCompare the no time compare
+	 * @param jar the jar
+	 * @param file the file
+	 * @param f the f
+	 * 
+	 * @return true, if successful
+	 * 
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws FileNotFoundException the file not found exception
+	 */
 	private boolean extractFile(boolean noTimeCompare, JarFile jar,
 			JarEntry file, File f) throws IOException, FileNotFoundException {
 		print("\t\t" + file.getName() + ":  ");
@@ -59,6 +82,15 @@ public class AnalysisDef extends Taskdef {
 		return noTimeCompare;
 	}
 
+	/**
+	 * Extract to temp.
+	 * 
+	 * @param jarFile the jar file
+	 * 
+	 * @return the file
+	 * 
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private File extractToTemp(File jarFile) throws IOException {
 
 		File tempdir = new File(System.getProperty("java.io.tmpdir"));
@@ -86,36 +118,77 @@ public class AnalysisDef extends Taskdef {
 		return temp;
 	}
 
+	/**
+	 * Checks if is cached.
+	 * 
+	 * @param file the file
+	 * @param f the f
+	 * 
+	 * @return true, if is cached
+	 */
 	private boolean isCached(JarEntry file, File f) {
 		return f.exists() && f.lastModified() == file.getTime()
 				&& f.length() == file.getSize();
 	}
 
+	/**
+	 * Prints the.
+	 * 
+	 * @param msg the msg
+	 */
 	private void print(String msg) {
 		if (!quiet) {
 			System.out.print(msg);
 		}
 	}
 
+	/**
+	 * Println.
+	 * 
+	 * @param msg the msg
+	 */
 	private void println(String msg) {
 		if (!quiet) {
 			System.out.println(msg);
 		}
 	}
 
+	/**
+	 * Sets the jar.
+	 * 
+	 * @param jarFile the new jar
+	 */
 	public void setJar(File jarFile) {
 		this.jarFile = jarFile;
 	}
 
+	/**
+	 * Sets the quiet.
+	 * 
+	 * @param b the new quiet
+	 */
 	public void setQuiet(boolean b) {
 		this.quiet = b;
 	}
 
+	/**
+	 * Write file.
+	 * 
+	 * @param noTimeCompare the no time compare
+	 * @param jar the jar
+	 * @param file the file
+	 * @param f the f
+	 * 
+	 * @return true, if successful
+	 * 
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws FileNotFoundException the file not found exception
+	 */
 	private boolean writeFile(boolean noTimeCompare, JarFile jar,
 			JarEntry file, File f) throws IOException, FileNotFoundException {
 		InputStream is = jar.getInputStream(file); // get the input stream
 		FileOutputStream fos = new FileOutputStream(f);
-		while (is.available() > 0) { 
+		while (is.available() > 0) {
 			fos.write(is.read());
 		}
 		fos.close();

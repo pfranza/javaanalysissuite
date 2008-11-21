@@ -14,41 +14,86 @@ import com.peterfranza.staticanalysis.tools.FindBugsTool;
 import com.peterfranza.staticanalysis.tools.JDependTool;
 import com.peterfranza.staticanalysis.tools.PmdTool;
 
+/**
+ * The Class Analysis.
+ */
 public class Analysis extends Task {
 
+	/** The tools. */
 	private List<AnalysisToolInterface> tools = new ArrayList<AnalysisToolInterface>();
 
+	/** The pmd rule sets. */
 	private String pmdRuleSets = "rulesets/favorites.xml";
+	
+	/** The check style config. */
 	private String checkStyleConfig = "libs/checkstyle/checkstyle_checks.xml";
+	
+	/** The base filename. */
 	private String baseFilename = "analysis_";
+	
+	/** The parent. */
 	private File parent;
 
+	/** The jvm args. */
 	private String jvmArgs;
 
+	/**
+	 * Sets the basename.
+	 * 
+	 * @param name the new basename
+	 */
 	public void setBasename(String name) {
 		baseFilename = name;
 	}
 
+	/**
+	 * Sets the pmdrulesets.
+	 * 
+	 * @param rulesets the new pmdrulesets
+	 */
 	public void setPmdrulesets(String rulesets) {
 		pmdRuleSets = rulesets;
 	}
 
+	/**
+	 * Sets the checkstyleconfig.
+	 * 
+	 * @param config the new checkstyleconfig
+	 */
 	public void setCheckstyleconfig(File config) {
 		checkStyleConfig = config.getAbsolutePath();
 	}
 
+	/**
+	 * Sets the todir.
+	 * 
+	 * @param parent the new todir
+	 */
 	public void setTodir(File parent) {
 		this.parent = parent;
 	}
 
+	/**
+	 * Sets the jvmargs.
+	 * 
+	 * @param s the new jvmargs
+	 */
 	public void setJvmargs(String s) {
 		this.jvmArgs = s;
 	}
 
+	/**
+	 * Gets the jvm args.
+	 * 
+	 * @return the jvm args
+	 */
 	public String getJvmArgs() {
 		return jvmArgs;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.apache.tools.ant.Task#init()
+	 */
 	@Override
 	public void init() throws BuildException {
 		if (parent == null) {
@@ -59,6 +104,9 @@ public class Analysis extends Task {
 		super.init();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.apache.tools.ant.Task#execute()
+	 */
 	@Override
 	public void execute() throws BuildException {
 
@@ -86,6 +134,9 @@ public class Analysis extends Task {
 		super.execute();
 	}
 
+	/**
+	 * Initialize tools.
+	 */
 	private void initializeTools() {
 		tools.add(new CheckStyleTool(
 				createReportFileHandle("checkstyle.xml"),
@@ -102,22 +153,46 @@ public class Analysis extends Task {
 		// +"ncss.xml")));
 	}
 
+	/**
+	 * Gets the library root.
+	 * 
+	 * @return the library root
+	 */
 	public File getLibraryRoot() {
 		return new File(getProject().getProperty("analyzer.unpack_home"));
 	}
 
+	/**
+	 * Creates the report file handle.
+	 * 
+	 * @param name the name
+	 * 
+	 * @return the file
+	 */
 	public File createReportFileHandle(String name) {
 		createFolder(parent);
 		File f = new File(parent, baseFilename + name);
 		return f;
 	}
 	
+	/**
+	 * Creates the folder.
+	 * 
+	 * @param f the f
+	 */
 	public static void createFolder(File f) {
 		if(!f.exists() && !f.mkdirs()) {
 			System.err.println("Failed to create: " + f.getAbsolutePath());
 		}
 	}
 
+	/**
+	 * Creates the tool instance.
+	 * 
+	 * @param s the s
+	 * 
+	 * @return the t
+	 */
 	@SuppressWarnings("unchecked")
 	private <T extends AnalysisToolInterface> T createToolInstance(Class<T> s) {
 		try {
