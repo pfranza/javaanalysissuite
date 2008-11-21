@@ -16,6 +16,7 @@ import com.peterfranza.staticanalysis.tools.PmdTool;
 
 /**
  * The Class Analysis.
+ * @author Peter.Franza
  */
 public class Analysis extends Task {
 

@@ -9,6 +9,7 @@ import org.apache.tools.ant.Task;
 
 /**
  * The Class AnalysisItem.
+ * @author Peter.Franza
  */
 public class AnalysisItem extends Task {
 

@@ -17,6 +17,7 @@ import org.apache.tools.ant.types.Path;
 
 /**
  * The Class AnalysisDef.
+ * @author Peter.Franza
  */
 public class AnalysisDef extends Taskdef {
 

@@ -25,12 +25,12 @@
 
     <property name="tabWidth" value="4" />
 
-    <module name="Regexp">
+    <!-- <module name="Regexp">
       <property name="id" value="trailing"/>
       <property name="format" value="[ \t]+$"/>
       <property name="illegalPattern" value="true"/>
       <property name="message" value="trailing whitespace"/>
-    </module>
+    </module>-->
 
     <module name="AvoidStarImport"/>
     <module name="ConstantName"/>
