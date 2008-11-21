@@ -74,6 +74,7 @@ public class Analysis extends Task {
 		System.out.println("Starting Analysis");
 		
 		for (AnalysisToolInterface t : tools) {
+			System.out.println("Running: " + t.getClass().getSimpleName());
 			t.analyze(this, getProject().createSubProject(), AnalysisItem
 					.getAnalysisItems());
 		}
@@ -112,10 +113,8 @@ public class Analysis extends Task {
 	}
 	
 	public static void createFolder(File f) {
-		if(!f.exists()) {
-			if(!f.mkdirs()) {
-				System.err.println("Failed to create: " + f.getAbsolutePath());
-			}	
+		if(!f.exists() && !f.mkdirs()) {
+			System.err.println("Failed to create: " + f.getAbsolutePath());
 		}
 	}
 
