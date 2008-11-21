@@ -9,6 +9,7 @@ import com.peterfranza.staticanalysis.AnalysisItem;
 
 /**
  * The Interface AnalysisToolInterface.
+ * @author Peter.Franza
  */
 public interface AnalysisToolInterface {
 	
