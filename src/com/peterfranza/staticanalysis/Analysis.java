@@ -9,6 +9,7 @@ import org.apache.tools.ant.Task;
 
 import com.peterfranza.staticanalysis.tools.AnalysisToolInterface;
 import com.peterfranza.staticanalysis.tools.CheckStyleTool;
+import com.peterfranza.staticanalysis.tools.CpdTool;
 import com.peterfranza.staticanalysis.tools.FindBugsTool;
 import com.peterfranza.staticanalysis.tools.JDependTool;
 import com.peterfranza.staticanalysis.tools.PmdTool;
@@ -91,7 +92,8 @@ public class Analysis extends Task {
 		
 		tools.add(new PmdTool(createReportFileHandle("pmd.xml"),
 				pmdRuleSets));
-
+		
+		tools.add(createToolInstance(CpdTool.class));
 		tools.add(createToolInstance(FindBugsTool.class));
 		tools.add(createToolInstance(JDependTool.class));
 
