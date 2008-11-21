@@ -187,7 +187,6 @@ public class JDependTask extends Task {
     /**
      * Adds a path to source code to analyze.
      * @return a source path
-     * @deprecated since 1.6.x.
      */
     public Path createSourcespath() {
         if (sourcesPath == null) {
@@ -199,7 +198,6 @@ public class JDependTask extends Task {
     /**
      * Gets the sourcepath.
      * @return the sources path
-     * @deprecated since 1.6.x.
      */
     public Path getSourcespath() {
         return sourcesPath;
