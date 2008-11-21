@@ -71,9 +71,9 @@
       <property name="option" value="nlow"/>
     </module>
 
-    <module name="LineLength">
+    <!-- <module name="LineLength">
       <property name="ignorePattern" value="^ *\* *[^ ]+$"/>
-    </module>
+    </module> -->
 
     <module name="LocalFinalVariableName"/>
     <module name="LocalVariableName"/>
