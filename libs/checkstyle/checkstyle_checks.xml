@@ -115,9 +115,9 @@
     <module name="TypecastParenPad"/>
     <module name="RedundantImport"/>
     <module name="RedundantModifier"/>
-    <module name="RightCurly">
+<!-- <module name="RightCurly">
       <property name="option" value="alone"/>
-    </module>
+    </module> -->
     <module name="SimplifyBooleanExpression"/>
     <module name="SimplifyBooleanReturn"/>
 
