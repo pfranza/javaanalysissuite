@@ -1,6 +1,6 @@
 <project name="Analysis" default="analyze">
 		
-	<property name="product.version" value="0.5b"/>
+	<property name="product.version" value="0.6b"/>
 	<property name="src.dir" value="${basedir}/src"/>
 	<property name="classes.dir" value="${basedir}/classes"/>
 	<property name="jar.name" value="jAnalysisSuite-${product.version}.jar" />
