@@ -78,7 +78,13 @@
     <module name="LocalFinalVariableName"/>
     <module name="LocalVariableName"/>
     <module name="MemberName">
-      <property name="format" value="^m[A-Z][a-zA-Z0-9]*$"/>
+      <property name="format" value="^^[a-z](_?[a-zA-Z0-9]+)*$"/>
+    </module>
+    <module name="ParameterName">
+      <property name="format" value="^^[a-z](_?[a-zA-Z0-9]+)*$"/>
+    </module>
+    <module name="StaticVariableName">
+      <property name="format" value="^^[a-z](_?[a-zA-Z0-9]+)*$"/>
     </module>
     <module name="MethodLength"/>
     <module name="MethodName"/>
@@ -101,9 +107,7 @@
       <property name="option" value="eol"/>
     </module>
     <module name="PackageName"/>
-    <module name="ParameterName">
-      <property name="format" value="^^[a-z](_?[a-zA-Z0-9]+)*$"/>
-    </module>
+
     <module name="ParameterNumber">
       <property name="id" value="paramNum"/>
     </module>
@@ -116,9 +120,7 @@
     </module>
     <module name="SimplifyBooleanExpression"/>
     <module name="SimplifyBooleanReturn"/>
-    <module name="StaticVariableName">
-      <property name="format" value="^s[A-Z][a-zA-Z0-9]*$"/>
-    </module>
+
     <!-- <module name="TabCharacter"/> -->
     <module name="TypeName"/>
     <module name="UnusedImports"/>
