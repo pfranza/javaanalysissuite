@@ -10,12 +10,13 @@ import org.apache.tools.ant.types.CommandlineJava;
 
 import com.peterfranza.staticanalysis.Analysis;
 import com.peterfranza.staticanalysis.AnalysisItem;
+import com.peterfranza.staticanalysis.tools.tasks.CPDWrapper.AddMode;
 
 /**
  * The Class CpdTool.
  * @author Peter.Franza
  */
-public class CpdTool implements AnalysisToolInterface {
+public class CpdTool extends AbstractAnalysisTool {
 
 	/* (non-Javadoc)
 	 * @see com.peterfranza.staticanalysis.tools.AnalysisToolInterface#analyze(com.peterfranza.staticanalysis.Analysis, org.apache.tools.ant.Project, java.util.List)
@@ -33,7 +34,15 @@ public class CpdTool implements AnalysisToolInterface {
 		commandline.setMaxmemory(analysis.getMaxMem());
 
 		for(AnalysisItem item: items) {
-			commandline.createArgument().setFile(item.getSourceDirectory());
+			if (item.useDirSet()) {
+				commandline.createArgument().setValue(AddMode.FILE.toString());
+				for (File file: getSourceFiles(item)) {
+					commandline.createArgument().setFile(file);
+				}
+			} else {
+				commandline.createArgument().setValue(AddMode.DIRECTORY.toString());
+				commandline.createArgument().setFile(item.getSourceDirectory());
+			}
 		}
 
 		final Execute exe = new Execute();
@@ -48,5 +57,4 @@ public class CpdTool implements AnalysisToolInterface {
 
 	}
 	
-
 }

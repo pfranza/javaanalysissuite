@@ -12,7 +12,7 @@ import com.puppycrawl.tools.checkstyle.CheckStyleTask;
 import com.puppycrawl.tools.checkstyle.CheckStyleTask.Formatter;
 import com.puppycrawl.tools.checkstyle.CheckStyleTask.FormatterType;
 
-public class CheckStyleTool implements AnalysisToolInterface {
+public class CheckStyleTool extends AbstractAnalysisTool {
 
 	private File report;
 	private File configFile;
@@ -28,10 +28,10 @@ public class CheckStyleTool implements AnalysisToolInterface {
 		task.setProject(project);
 		
 		for(AnalysisItem item: items) {
-			FileSet fs = new FileSet();
-			fs.setDir(item.getSourceDirectory());
-			fs.setIncludes("**/*.java");		
-			task.addFileset(fs);
+			List<FileSet> fileSets = getSourceFileSets(item);
+			for (FileSet fileSet: fileSets) {
+				task.addFileset(fileSet);
+			}
 		}
 
 		FormatterType type = new FormatterType();
@@ -48,5 +48,6 @@ public class CheckStyleTool implements AnalysisToolInterface {
 		task.addFormatter(format);
 		task.perform();
 	}
+
 
 }

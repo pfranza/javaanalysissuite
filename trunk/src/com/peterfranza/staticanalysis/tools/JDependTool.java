@@ -25,9 +25,15 @@ public class JDependTool implements AnalysisToolInterface {
 		}});
 		
 		for(AnalysisItem item: items) {
-			task.createClassespath().addDirset(createDirSetFromFile(item.getBuildDirectory()));
-			task.createClasspath().addDirset(createDirSetFromFile(item.getBuildDirectory()));
-			task.createSourcespath().addDirset(createDirSetFromFile(item.getSourceDirectory()));
+			if (item.useDirSet()) {
+				task.createSourcespath().addDirset(item.getDirSet());
+				task.createClassespath().addDirset(item.getDirSet());
+				task.createClasspath().addDirset(item.getDirSet());
+			} else {
+				task.createClassespath().addDirset(createDirSetFromFile(item.getBuildDirectory()));
+				task.createClasspath().addDirset(createDirSetFromFile(item.getBuildDirectory()));
+				task.createSourcespath().addDirset(createDirSetFromFile(item.getSourceDirectory()));
+			}
 		}
 		
 		task.perform();
@@ -38,5 +44,5 @@ public class JDependTool implements AnalysisToolInterface {
 		d2.setDir(f);
 		return d2;
 	}
-
+	
 }

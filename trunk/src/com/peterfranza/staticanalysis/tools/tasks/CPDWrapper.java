@@ -22,20 +22,47 @@ public class CPDWrapper {
 	 * @throws Exception the exception
 	 */
 	public static void main(String[] args) throws Exception {
-		//Usage: <output file> <minimum tokens> ... <Files> 
+		//Usage: <output file> <minimum tokens> <FILE|DIRECTORY> <Files> <FILE|DIRECTORY> <Files> ...  
 		final FileWriter fos = new FileWriter(new File(args[0]));
 		final Renderer renderer = CPD.getRendererFromString("xml", System.getProperty("file.encoding"));
 		final CPD cpd = new CPD(Integer.valueOf(args[1]), (new LanguageFactory()).createLanguage("java"));
 		cpd.skipDuplicates();
 		cpd.setEncoding(System.getProperty("file.encoding"));
 		
+		AddMode mode = null;
 		for(int i = 2; i < args.length; i++) {
-				cpd.addRecursively(args[i]);
+			String arg = args[i];
+			if (arg.equals(AddMode.FILE.toString()) || arg.equals(AddMode.DIRECTORY.toString())) {
+				mode = AddMode.valueOf(arg);
+				i++;
+			}
+			if (AddMode.FILE.equals(mode)) {
+				cpd.add(new File(args[i]));
+			} else if (AddMode.DIRECTORY.equals(mode)) {
+				cpd.addRecursively(args[i]);	
+			} else {
+				throw new RuntimeException("no mode set");
+			}
 		}
 
 		cpd.go();
 		fos.write(renderer.render(cpd.getMatches()));
 		fos.close();
+	}
+	
+	/**
+	 * Used to tell the wrapper if it should add files or directories to the
+	 * CPD task.
+	 */
+	public enum AddMode {
+		/**
+		 * Add individual files.
+		 */
+		FILE,
+		/**
+		 * Recursively add directories.
+		 */
+		DIRECTORY
 	}
 
 }
