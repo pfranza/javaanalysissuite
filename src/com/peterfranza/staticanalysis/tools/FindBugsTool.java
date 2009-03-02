@@ -25,11 +25,21 @@ public class FindBugsTool implements AnalysisToolInterface {
 		
 		
 		for(AnalysisItem item: items) {
-			task.createClass().setLocation(item.getBuildDirectory());
-			task.createSourcePath().setLocation(item.getSourceDirectory());
+			if (item.useDirSet()) {
+				for(File file: item.getDirectories()) {
+					addDirectories(task, file, file);
+				}
+			} else {
+				addDirectories(task, item.getSourceDirectory(), item.getBuildDirectory());
+			}
 		}
 		
 		task.perform();		
 	}
 
+	private void addDirectories(FindBugsTask task, File src, File build) {
+		task.createClass().setLocation(build);
+		task.createSourcePath().setLocation(src);
+	}
+	
 }

@@ -1,6 +1,6 @@
 <project name="Analysis" default="analyze">
 		
-	<property name="product.version" value="0.6b"/>
+	<property name="product.version" value="0.7"/>
 	<property name="src.dir" value="${basedir}/src"/>
 	<property name="classes.dir" value="${basedir}/classes"/>
 	<property name="jar.name" value="jAnalysisSuite-${product.version}.jar" />
@@ -40,8 +40,18 @@
 	        <setupAnalysis jar="${jar.name}" quiet="true"/>
 	        
 	        <!-- add individual parts of the project to the batch -->
-	        <addAnalysisItem srcdir="${src.dir}"  builddir="${classes.dir}"/>
-	        
+        <!--
+	        <addAnalysisItem>
+                <dirset dir=".">
+                    <include name="src/**" />
+                    <include name="classes/**" />
+                    <exclude name="src/**/tools" />
+                    <exclude name="classes/**/tools" />
+                </dirset>
+	        </addAnalysisItem>
+        -->
+        <addAnalysisItem srcdir="${src.dir}" builddir="${classes.dir}" />
+		
 	        <!-- run the analysis -->
 	        <performStaticAnalysis  todir="reports" basename="report_" 
 	            checkstyleconfig="${basedir}/libs/checkstyle/checkstyle_checks.xml"

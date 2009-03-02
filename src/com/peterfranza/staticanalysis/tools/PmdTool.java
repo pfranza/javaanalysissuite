@@ -12,7 +12,7 @@ import org.apache.tools.ant.types.FileSet;
 import com.peterfranza.staticanalysis.Analysis;
 import com.peterfranza.staticanalysis.AnalysisItem;
 
-public class PmdTool implements AnalysisToolInterface {
+public class PmdTool extends AbstractAnalysisTool {
 
 	private File reportFile;
 	private String ruleSets;
@@ -29,10 +29,10 @@ public class PmdTool implements AnalysisToolInterface {
 		task.setRuleSetFiles(ruleSets);
 		
 		for(AnalysisItem item: items) {
-			FileSet fs = new FileSet();
-			fs.setDir(item.getSourceDirectory());
-			fs.setIncludes("**/*.java");		
-			task.addFileset(fs);
+			List<FileSet> fileSets = getSourceFileSets(item);
+			for (FileSet fileSet: fileSets) {
+				task.addFileset(fileSet);
+			}
 		}
 		
 		Formatter format = new Formatter();
