@@ -23,6 +23,8 @@ public class Analysis extends Task {
 	/** The tools. */
 	private List<AnalysisToolInterface> tools = new ArrayList<AnalysisToolInterface>();
 
+	private List<Skip> skip = new ArrayList<Skip>(); 
+	
 	/** The pmd rule sets. */
 	private String pmdRuleSets = "rulesets/favorites.xml";
 	
@@ -126,9 +128,13 @@ public class Analysis extends Task {
 		System.out.println("Starting Analysis");
 		
 		for (AnalysisToolInterface t : tools) {
-			System.out.println("Running: " + t.getClass().getSimpleName());
-			t.analyze(this, getProject().createSubProject(), AnalysisItem
-					.getAnalysisItems());
+			if(!isSkipped(t)) {
+				System.out.println("Running: " + t.getClass().getSimpleName());
+				t.analyze(this, getProject().createSubProject(), AnalysisItem
+						.getAnalysisItems());
+			} else {
+				System.out.println("Skipping: " + t.getClass().getSimpleName());
+			}
 		}
 
 		final long end = System.currentTimeMillis();
@@ -138,6 +144,19 @@ public class Analysis extends Task {
 		super.execute();
 	}
 
+	private boolean isSkipped(AnalysisToolInterface t) {
+		for(Skip s: skip) {
+			if(s.shouldSkip(t)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void addSkip(Skip s) {
+		skip.add(s);
+	}
+	
 	/**
 	 * Initialize tools.
 	 */
@@ -196,7 +215,6 @@ public class Analysis extends Task {
 	 * 
 	 * @return the t
 	 */
-	@SuppressWarnings("unchecked")
 	private <T extends AnalysisToolInterface> T createToolInstance(Class<T> s) {
 		try {
 			return s.newInstance();
