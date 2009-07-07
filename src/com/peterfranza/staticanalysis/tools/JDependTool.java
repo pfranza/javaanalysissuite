@@ -1,3 +1,17 @@
+/*
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License. 
+ * 
+ * @author peter.franza
+ * 
+ * Copyright (c) 2009 Open Roads Consulting, Inc. All rights reserved.
+ * 
+ */
 package com.peterfranza.staticanalysis.tools;
 
 import java.io.File;
@@ -11,8 +25,14 @@ import com.peterfranza.staticanalysis.AnalysisItem;
 import com.peterfranza.staticanalysis.tools.tasks.JDependTask;
 import com.peterfranza.staticanalysis.tools.tasks.JDependTask.FormatAttribute;
 
+/**
+ * The Class JDependTool.
+ */
 public class JDependTool implements AnalysisToolInterface {
 	
+	/* (non-Javadoc)
+	 * @see com.peterfranza.staticanalysis.tools.AnalysisToolInterface#analyze(com.peterfranza.staticanalysis.Analysis, org.apache.tools.ant.Project, java.util.List)
+	 */
 	public void analyze(Analysis analysis, Project project, List<AnalysisItem> items) {
 		JDependTask task = new JDependTask();
 		task.setProject(project);

@@ -1,3 +1,17 @@
+/*
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License. 
+ * 
+ * @author peter.franza
+ * 
+ * Copyright (c) 2009 Open Roads Consulting, Inc. All rights reserved.
+ * 
+ */
 package com.peterfranza.staticanalysis;
 
 import java.io.File;
@@ -16,6 +30,7 @@ import com.peterfranza.staticanalysis.tools.PmdTool;
 
 /**
  * The Class Analysis.
+ * 
  * @author Peter.Franza
  */
 public class Analysis extends Task {
@@ -153,6 +168,11 @@ public class Analysis extends Task {
 		return false;
 	}
 
+	/**
+	 * Adds the skip.
+	 * 
+	 * @param s the s
+	 */
 	public void addSkip(Skip s) {
 		skip.add(s);
 	}

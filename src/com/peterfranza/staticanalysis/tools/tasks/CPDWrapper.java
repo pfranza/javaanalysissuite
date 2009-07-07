@@ -1,3 +1,17 @@
+/*
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License. 
+ * 
+ * @author peter.franza
+ * 
+ * Copyright (c) 2009 Open Roads Consulting, Inc. All rights reserved.
+ * 
+ */
 package com.peterfranza.staticanalysis.tools.tasks;
 
 import java.io.File;
@@ -10,6 +24,7 @@ import net.sourceforge.pmd.cpd.Renderer;
 
 /**
  * The Class CPDWrapper.
+ * 
  * @author Peter.Franza
  */
 public class CPDWrapper {
@@ -55,13 +70,11 @@ public class CPDWrapper {
 	 * CPD task.
 	 */
 	public enum AddMode {
-		/**
-		 * Add individual files.
-		 */
+		
+		/** Add individual files. */
 		FILE,
-		/**
-		 * Recursively add directories.
-		 */
+		
+		/** Recursively add directories. */
 		DIRECTORY
 	}
 
