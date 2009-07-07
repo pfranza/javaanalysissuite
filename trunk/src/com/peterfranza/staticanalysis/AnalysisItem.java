@@ -1,3 +1,17 @@
+/*
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ * 
+ * @author peter.franza
+ * 
+ * Copyright (c) 2009 Open Roads Consulting, Inc. All rights reserved.
+ * 
+ */
 package com.peterfranza.staticanalysis;
 
 import java.io.File;
@@ -12,12 +26,13 @@ import org.apache.tools.ant.types.resources.FileResource;
 
 /**
  * The Class AnalysisItem.
+ * 
  * @author Peter.Franza
  */
 public class AnalysisItem extends Task {
 
 	/** The projects. */
-	private static List<AnalysisItem> projects = new ArrayList<AnalysisItem>();
+	private static List<AnalysisItem> Projects = new ArrayList<AnalysisItem>();
 
 	/**
 	 * Adds the analysis item.
@@ -25,7 +40,7 @@ public class AnalysisItem extends Task {
 	 * @param item the item
 	 */
 	public static void addAnalysisItem(AnalysisItem item) {
-		projects.add(item);
+		Projects.add(item);
 	}
 
 	/**
@@ -34,15 +49,15 @@ public class AnalysisItem extends Task {
 	 * @return the analysis items
 	 */
 	public static List<AnalysisItem> getAnalysisItems() {
-		return projects;
+		return Projects;
 	}
 
 	/** The source directory. */
 	private File sourceDirectory;
-	
+
 	/** The cls directory. */
 	private File clsDirectory;
-	
+
 	/** Both source and cls directories */
 	private DirSet dirSet;
 	private boolean dirSetAdded;
@@ -62,9 +77,9 @@ public class AnalysisItem extends Task {
 	 * @param buildDirectory the new builddir
 	 */
 	public void setBuilddir(String buildDirectory) {
-		this.clsDirectory = getProject().resolveFile(buildDirectory);
+		clsDirectory = getProject().resolveFile(buildDirectory);
 	}
-	
+
 	public void addDirset(DirSet dirSet) {
 		// for some reason a null check on dirSet won't work here so we have to
 		// keep a boolean tracking calls to this method
@@ -84,9 +99,9 @@ public class AnalysisItem extends Task {
 		validateInputs();
 		addAnalysisItem(this);
 	}
-	
+
 	/**
-	 * Ensure that this analysis item has both a sourceDirectory and 
+	 * Ensure that this analysis item has both a sourceDirectory and
 	 * buildDirectory OR a directory set.
 	 */
 	private void validateInputs() {
@@ -117,7 +132,7 @@ public class AnalysisItem extends Task {
 	public File getBuildDirectory() {
 		return clsDirectory;
 	}
-	
+
 	/**
 	 * Gets a combined set of source and build directories.
 	 * 
@@ -126,7 +141,7 @@ public class AnalysisItem extends Task {
 	public DirSet getDirSet() {
 		return dirSet;
 	}
-	
+
 	/**
 	 * @return true if the DirSet should be used instead of source and build
 	 * directories
@@ -134,7 +149,7 @@ public class AnalysisItem extends Task {
 	public boolean useDirSet() {
 		return dirSetAdded;
 	}
-	
+
 	public List<File> getDirectories() {
 		List<File> dirs = new ArrayList<File>();
 		if (dirSet != null) {
@@ -149,5 +164,5 @@ public class AnalysisItem extends Task {
 		}
 		return dirs;
 	}
-	
+
 }

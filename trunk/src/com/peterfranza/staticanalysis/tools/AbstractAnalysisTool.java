@@ -1,3 +1,17 @@
+/*
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License. 
+ * 
+ * @author peter.franza
+ * 
+ * Copyright (c) 2009 Open Roads Consulting, Inc. All rights reserved.
+ * 
+ */
 package com.peterfranza.staticanalysis.tools;
 
 import java.io.File;
@@ -10,15 +24,19 @@ import org.apache.tools.ant.types.FileSet;
 import com.peterfranza.staticanalysis.AnalysisItem;
 
 /**
- * Contains some helper methods for extracting FileSets and Files from 
+ * Contains some helper methods for extracting FileSets and Files from
  * AnalysisItems.
+ * 
  * @author Craig.McIlwee
  */
 public abstract class AbstractAnalysisTool implements AnalysisToolInterface {
 
 	/**
 	 * Get all of the AnalysisItem's FileSets.
+	 * 
 	 * @param item to create FileSets from
+	 * 
+	 * @return the source file sets
 	 */
 	protected List<FileSet> getSourceFileSets(AnalysisItem item) {
 		return getFileSets(item, "java");
@@ -26,7 +44,10 @@ public abstract class AbstractAnalysisTool implements AnalysisToolInterface {
 	
 	/**
 	 * Get all of the AnalysisItem's FileSets.
+	 * 
 	 * @param item to create FileSets from
+	 * 
+	 * @return the builds the file sets
 	 */
 	protected List<FileSet> getBuildFileSets(AnalysisItem item) {
 		return getFileSets(item, "class");
@@ -67,7 +88,10 @@ public abstract class AbstractAnalysisTool implements AnalysisToolInterface {
 
 	/**
 	 * Get all of the AnalysisItem's .java Files.
+	 * 
 	 * @param item to get Files from
+	 * 
+	 * @return the source files
 	 */
 	protected List<File> getSourceFiles(AnalysisItem item) {
 		return getFiles(item, "java");
@@ -75,7 +99,10 @@ public abstract class AbstractAnalysisTool implements AnalysisToolInterface {
 
 	/**
 	 * Get all of the AnalysisItem's .class Files.
+	 * 
 	 * @param item to get Files from
+	 * 
+	 * @return the builds the files
 	 */
 	protected List<File> getBuildFiles(AnalysisItem item) {
 		return getFiles(item, "class");

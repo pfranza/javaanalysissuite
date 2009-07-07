@@ -5,7 +5,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License. 
+ * under the License.
  * 
  * @author peter.franza
  * 
@@ -30,7 +30,7 @@ public class Skip extends DataType{
 	 * 
 	 * @return the tool
 	 */
-	public synchronized final String getTool() {
+	public final synchronized String getTool() {
 		return tool;
 	}
 
@@ -39,7 +39,7 @@ public class Skip extends DataType{
 	 * 
 	 * @param tool the new tool
 	 */
-	public synchronized final void setTool(String tool) {
+	public final synchronized void setTool(String tool) {
 		this.tool = tool;
 	}
 
@@ -53,5 +53,5 @@ public class Skip extends DataType{
 	public boolean shouldSkip(AnalysisToolInterface t) {
 		return tool.equalsIgnoreCase(t.getClass().getSimpleName());
 	}
-	
+
 }
