@@ -5,7 +5,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License. 
+ * under the License.
  * 
  * @author peter.franza
  * 
@@ -21,7 +21,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 
 import com.peterfranza.staticanalysis.Analysis;
-import com.peterfranza.staticanalysis.AnalysisItem;
+import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
 import com.puppycrawl.tools.checkstyle.CheckStyleTask;
 import com.puppycrawl.tools.checkstyle.CheckStyleTask.Formatter;
 import com.puppycrawl.tools.checkstyle.CheckStyleTask.FormatterType;
@@ -31,8 +31,8 @@ import com.puppycrawl.tools.checkstyle.CheckStyleTask.FormatterType;
  */
 public class CheckStyleTool extends AbstractAnalysisTool {
 
-	private File report;
-	private File configFile;
+	private final File report;
+	private final File configFile;
 
 	/**
 	 * Instantiates a new check style tool.
@@ -44,16 +44,17 @@ public class CheckStyleTool extends AbstractAnalysisTool {
 		this.report = report;
 		this.configFile = configFile;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see com.peterfranza.staticanalysis.tools.AnalysisToolInterface#analyze(com.peterfranza.staticanalysis.Analysis, org.apache.tools.ant.Project, java.util.List)
 	 */
-	public void analyze(Analysis analysis, Project project, List<AnalysisItem> items) {
-		
+	public void analyze(Analysis analysis, Project project,
+			List<AnalysisHolder> items) {
+
 		CheckStyleTask task = new CheckStyleTask();
 		task.setProject(project);
-		
-		for(AnalysisItem item: items) {
+
+		for (AnalysisHolder item : items) {
 			List<FileSet> fileSets = getSourceFileSets(item);
 			for (FileSet fileSet: fileSets) {
 				task.addFileset(fileSet);
@@ -66,8 +67,8 @@ public class CheckStyleTool extends AbstractAnalysisTool {
 		Formatter format = new Formatter();
 		format.setType(type);
 		format.setTofile(report);
-		
-		
+
+
 		task.setConfig(configFile);
 
 		task.setFailOnViolation(false);

@@ -5,7 +5,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License. 
+ * under the License.
  * 
  * @author peter.franza
  * 
@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.apache.tools.ant.types.FileSet;
 
-import com.peterfranza.staticanalysis.AnalysisItem;
+import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
 
 /**
  * Contains some helper methods for extracting FileSets and Files from
@@ -38,10 +38,10 @@ public abstract class AbstractAnalysisTool implements AnalysisToolInterface {
 	 * 
 	 * @return the source file sets
 	 */
-	protected List<FileSet> getSourceFileSets(AnalysisItem item) {
+	protected List<FileSet> getSourceFileSets(AnalysisHolder item) {
 		return getFileSets(item, "java");
 	}
-	
+
 	/**
 	 * Get all of the AnalysisItem's FileSets.
 	 * 
@@ -49,11 +49,11 @@ public abstract class AbstractAnalysisTool implements AnalysisToolInterface {
 	 * 
 	 * @return the builds the file sets
 	 */
-	protected List<FileSet> getBuildFileSets(AnalysisItem item) {
+	protected List<FileSet> getBuildFileSets(AnalysisHolder item) {
 		return getFileSets(item, "class");
 	}
-	
-	private List<FileSet> getFileSets(AnalysisItem item, String extension) {
+
+	private List<FileSet> getFileSets(AnalysisHolder item, String extension) {
 		List<FileSet> fileSets = new ArrayList<FileSet>();
 		if (item.useDirSet()) {
 			for (File file: item.getDirectories()) {
@@ -67,7 +67,7 @@ public abstract class AbstractAnalysisTool implements AnalysisToolInterface {
 		}
 		return fileSets;
 	}
-	
+
 	/**
 	 * Create a FileSet that includes all .java files.
 	 * @param directory that will have all files added
@@ -93,7 +93,7 @@ public abstract class AbstractAnalysisTool implements AnalysisToolInterface {
 	 * 
 	 * @return the source files
 	 */
-	protected List<File> getSourceFiles(AnalysisItem item) {
+	protected List<File> getSourceFiles(AnalysisHolder item) {
 		return getFiles(item, "java");
 	}
 
@@ -104,18 +104,18 @@ public abstract class AbstractAnalysisTool implements AnalysisToolInterface {
 	 * 
 	 * @return the builds the files
 	 */
-	protected List<File> getBuildFiles(AnalysisItem item) {
+	protected List<File> getBuildFiles(AnalysisHolder item) {
 		return getFiles(item, "class");
 	}
-	
-	private List<File> getFiles(AnalysisItem item, String extension) {
+
+	private List<File> getFiles(AnalysisHolder item, String extension) {
 		List<File> files = new ArrayList<File>();
 		for (File directory: item.getDirectories()) {
 			files.addAll(getFilesInDir(directory, extension));
 		}
 		return files;
 	}
-	
+
 	private List<File> getFilesInDir(File directory, String extension) {
 		List<File> files = new ArrayList<File>();
 		File[] fileArray = directory.listFiles(new ExtensionFilter(extension));
@@ -124,19 +124,19 @@ public abstract class AbstractAnalysisTool implements AnalysisToolInterface {
 		}
 		return files;
 	}
-	
+
 	/**
 	 * Filters files by extension.
 	 */
 	private static class ExtensionFilter implements FilenameFilter {
-		private String extension;
+		private final String extension;
 		public ExtensionFilter(String extension) {
 			this.extension = extension;
 		}
 		public boolean accept(File dir, String name) {
 			return name.endsWith(extension);
 		}
-		
+
 	}
-	
+
 }

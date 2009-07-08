@@ -5,7 +5,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License. 
+ * under the License.
  * 
  * @author peter.franza
  * 
@@ -24,15 +24,15 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 
 import com.peterfranza.staticanalysis.Analysis;
-import com.peterfranza.staticanalysis.AnalysisItem;
+import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
 
 /**
  * The Class PmdTool.
  */
 public class PmdTool extends AbstractAnalysisTool {
 
-	private File reportFile;
-	private String ruleSets;
+	private final File reportFile;
+	private final String ruleSets;
 
 	/**
 	 * Instantiates a new pmd tool.
@@ -44,32 +44,33 @@ public class PmdTool extends AbstractAnalysisTool {
 		this.reportFile = reportFile;
 		this.ruleSets = ruleSets;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see com.peterfranza.staticanalysis.tools.AnalysisToolInterface#analyze(com.peterfranza.staticanalysis.Analysis, org.apache.tools.ant.Project, java.util.List)
 	 */
-	public void analyze(Analysis analysis, Project project, List<AnalysisItem> items) {
+	public void analyze(Analysis analysis, Project project,
+			List<AnalysisHolder> items) {
 		PMDTask task = new PMDTask();
 		task.setProject(project);
 		task.setShortFilenames(true);
 		task.setRuleSetFiles(ruleSets);
-		
-		for(AnalysisItem item: items) {
+
+		for (AnalysisHolder item : items) {
 			List<FileSet> fileSets = getSourceFileSets(item);
 			for (FileSet fileSet: fileSets) {
 				task.addFileset(fileSet);
 			}
 		}
-		
+
 		Formatter format = new Formatter();
-			format.setToFile(reportFile);
-			format.setType("xml");
-			
+		format.setToFile(reportFile);
+		format.setType("xml");
+
 		task.addFormatter(format);
 		task.setFailOnError(false);
 		task.setFailOnRuleViolation(false);
 		task.perform();
-		
+
 	}
 
 }

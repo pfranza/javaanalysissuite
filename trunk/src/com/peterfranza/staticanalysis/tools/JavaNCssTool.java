@@ -5,7 +5,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License. 
+ * under the License.
  * 
  * @author peter.franza
  * 
@@ -21,14 +21,14 @@ import java.util.List;
 import org.apache.tools.ant.Project;
 
 import com.peterfranza.staticanalysis.Analysis;
-import com.peterfranza.staticanalysis.AnalysisItem;
+import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
 
 /**
  * The Class JavaNCssTool.
  */
 public class JavaNCssTool implements AnalysisToolInterface {
 
-	private File reportFile;
+	private final File reportFile;
 
 	/**
 	 * Instantiates a new java n css tool.
@@ -38,22 +38,23 @@ public class JavaNCssTool implements AnalysisToolInterface {
 	public JavaNCssTool(File reportFile) {
 		this.reportFile = reportFile;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see com.peterfranza.staticanalysis.tools.AnalysisToolInterface#analyze(com.peterfranza.staticanalysis.Analysis, org.apache.tools.ant.Project, java.util.List)
 	 */
-	public void analyze(Analysis analysis, Project project, List<AnalysisItem> items) {
+	public void analyze(Analysis analysis, Project project,
+			List<AnalysisHolder> items) {
 		List<String> arg = new ArrayList<String>();
-			arg.add("-xml");
-			arg.add("-all");
-			arg.add("-recursive");
-			arg.add("-out");
-			arg.add(reportFile.getAbsolutePath());
-			for(AnalysisItem item: items) {
-				arg.add(item.getSourceDirectory().getAbsolutePath());
-			}
+		arg.add("-xml");
+		arg.add("-all");
+		arg.add("-recursive");
+		arg.add("-out");
+		arg.add(reportFile.getAbsolutePath());
+		for (AnalysisHolder item : items) {
+			arg.add(item.getSourceDirectory().getAbsolutePath());
+		}
 
-		javancss.Main.main((String[]) arg.toArray(new String[arg.size()]));
+		javancss.Main.main(arg.toArray(new String[arg.size()]));
 	}
 
 }

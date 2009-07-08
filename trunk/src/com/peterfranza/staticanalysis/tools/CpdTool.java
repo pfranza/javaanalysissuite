@@ -5,7 +5,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License. 
+ * under the License.
  * 
  * @author peter.franza
  * 
@@ -23,7 +23,7 @@ import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.CommandlineJava;
 
 import com.peterfranza.staticanalysis.Analysis;
-import com.peterfranza.staticanalysis.AnalysisItem;
+import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
 import com.peterfranza.staticanalysis.tools.tasks.CPDWrapper.AddMode;
 
 /**
@@ -37,7 +37,7 @@ public class CpdTool extends AbstractAnalysisTool {
 	 * @see com.peterfranza.staticanalysis.tools.AnalysisToolInterface#analyze(com.peterfranza.staticanalysis.Analysis, org.apache.tools.ant.Project, java.util.List)
 	 */
 	public void analyze(final Analysis analysis, Project project,
-			List<AnalysisItem> items) {
+			List<AnalysisHolder> items) {
 
 		final CommandlineJava commandline = new CommandlineJava();
 		commandline.setClassname("com.peterfranza.staticanalysis.tools.tasks.CPDWrapper");
@@ -48,7 +48,7 @@ public class CpdTool extends AbstractAnalysisTool {
 
 		commandline.setMaxmemory(analysis.getMaxMem());
 
-		for(AnalysisItem item: items) {
+		for (AnalysisHolder item : items) {
 			if (item.useDirSet()) {
 				commandline.createArgument().setValue(AddMode.FILE.toString());
 				for (File file: getSourceFiles(item)) {
@@ -71,5 +71,5 @@ public class CpdTool extends AbstractAnalysisTool {
 		}
 
 	}
-	
+
 }

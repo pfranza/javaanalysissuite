@@ -5,7 +5,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License. 
+ * under the License.
  * 
  * @author peter.franza
  * 
@@ -19,7 +19,7 @@ import java.util.List;
 import org.apache.tools.ant.Project;
 
 import com.peterfranza.staticanalysis.Analysis;
-import com.peterfranza.staticanalysis.AnalysisItem;
+import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
 
 /**
  * The Interface AnalysisToolInterface.
@@ -27,7 +27,7 @@ import com.peterfranza.staticanalysis.AnalysisItem;
  * @author Peter.Franza
  */
 public interface AnalysisToolInterface {
-	
+
 	/**
 	 * Analyze.
 	 * 
@@ -35,5 +35,5 @@ public interface AnalysisToolInterface {
 	 * @param project the project
 	 * @param items the items
 	 */
-	void analyze(Analysis analysis, Project project, List<AnalysisItem> items);
+	void analyze(Analysis analysis, Project project, List<AnalysisHolder> items);
 }

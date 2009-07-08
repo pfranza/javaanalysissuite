@@ -5,7 +5,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License. 
+ * under the License.
  * 
  * @author peter.franza
  * 
@@ -38,7 +38,7 @@ public class AnalysisDef extends Taskdef {
 
 	/** The jar file. */
 	private File jarFile;
-	
+
 	/** The quiet. */
 	private boolean quiet = true;
 
@@ -50,7 +50,7 @@ public class AnalysisDef extends Taskdef {
 
 		try {
 			final File root = extractToTemp(jarFile);
-
+			//
 			final FileSet allJars = new FileSet();
 			allJars.setProject(getProject());
 			allJars.setDir(root);
@@ -60,7 +60,7 @@ public class AnalysisDef extends Taskdef {
 			path.setProject(getProject());
 			path.addFileset(allJars);
 			path.createPathElement().setLocation(jarFile);
-
+			//
 			setClasspath(path);
 
 			setResource("analysis.properties");
@@ -128,7 +128,7 @@ public class AnalysisDef extends Taskdef {
 
 		if (noTimeCompare) {
 			System.out
-					.println("Can't alter timestamps: this will cause unpack every run.");
+			.println("Can't alter timestamps: this will cause unpack every run.");
 		}
 
 		return temp;
@@ -144,7 +144,7 @@ public class AnalysisDef extends Taskdef {
 	 */
 	private boolean isCached(JarEntry file, File f) {
 		return f.exists() && f.lastModified() == file.getTime()
-				&& f.length() == file.getSize();
+		&& f.length() == file.getSize();
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class AnalysisDef extends Taskdef {
 	 * @param b the new quiet
 	 */
 	public void setQuiet(boolean b) {
-		this.quiet = b;
+		quiet = b;
 	}
 
 	/**
@@ -204,11 +204,18 @@ public class AnalysisDef extends Taskdef {
 			JarEntry file, File f) throws IOException, FileNotFoundException {
 		final InputStream is = jar.getInputStream(file); // get the input stream
 		final FileOutputStream fos = new FileOutputStream(f);
-		while (is.available() > 0) {
-			fos.write(is.read());
+		try {
+			while (is.available() > 0) {
+				fos.write(is.read());
+			}
+		} finally {
+			if (fos != null) {
+				fos.close();
+			}
+			if (is != null) {
+				is.close();
+			}
 		}
-		fos.close();
-		is.close();
 		if (!f.setLastModified(file.getTime())) {
 			noTimeCompare = true;
 		}
