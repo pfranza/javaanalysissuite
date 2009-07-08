@@ -32,14 +32,14 @@ import org.apache.tools.ant.types.resources.FileResource;
 public class AnalysisItem extends Task {
 
 	/** The projects. */
-	private static List<AnalysisItem> Projects = new ArrayList<AnalysisItem>();
+	private static List<AnalysisHolder> Projects = new ArrayList<AnalysisHolder>();
 
 	/**
 	 * Adds the analysis item.
 	 * 
 	 * @param item the item
 	 */
-	public static void addAnalysisItem(AnalysisItem item) {
+	public static synchronized void addAnalysisItem(AnalysisHolder item) {
 		Projects.add(item);
 	}
 
@@ -48,19 +48,12 @@ public class AnalysisItem extends Task {
 	 * 
 	 * @return the analysis items
 	 */
-	public static List<AnalysisItem> getAnalysisItems() {
+	public static List<AnalysisHolder> getAnalysisItems() {
 		return Projects;
 	}
 
-	/** The source directory. */
-	private File sourceDirectory;
+	private final AnalysisHolder holder = new AnalysisHolder();
 
-	/** The cls directory. */
-	private File clsDirectory;
-
-	/** Both source and cls directories */
-	private DirSet dirSet;
-	private boolean dirSetAdded;
 
 	/**
 	 * Sets the srcdir.
@@ -68,7 +61,7 @@ public class AnalysisItem extends Task {
 	 * @param sourceDirectory the new srcdir
 	 */
 	public void setSrcdir(String sourceDirectory) {
-		this.sourceDirectory = getProject().resolveFile(sourceDirectory);
+		holder.sourceDirectory = getProject().resolveFile(sourceDirectory);
 	}
 
 	/**
@@ -77,17 +70,17 @@ public class AnalysisItem extends Task {
 	 * @param buildDirectory the new builddir
 	 */
 	public void setBuilddir(String buildDirectory) {
-		clsDirectory = getProject().resolveFile(buildDirectory);
+		holder.clsDirectory = getProject().resolveFile(buildDirectory);
 	}
 
 	public void addDirset(DirSet dirSet) {
 		// for some reason a null check on dirSet won't work here so we have to
 		// keep a boolean tracking calls to this method
-		if (dirSetAdded) {
+		if (holder.dirSetAdded) {
 			throw new BuildException("Each analysis item may only have a single dirset");
 		}
-		dirSetAdded = true;
-		this.dirSet = dirSet;
+		holder.dirSetAdded = true;
+		holder.dirSet = dirSet;
 	}
 
 	/* (non-Javadoc)
@@ -97,7 +90,7 @@ public class AnalysisItem extends Task {
 	public void execute() throws BuildException {
 		super.execute();
 		validateInputs();
-		addAnalysisItem(this);
+		addAnalysisItem(holder);
 	}
 
 	/**
@@ -105,64 +98,89 @@ public class AnalysisItem extends Task {
 	 * buildDirectory OR a directory set.
 	 */
 	private void validateInputs() {
-		if (dirSet != null && (sourceDirectory != null || clsDirectory != null)) {
+		if (holder.dirSet != null && (holder.sourceDirectory != null || holder.clsDirectory != null)) {
 			throw new BuildException("analysisItem has a dirSet and a srcdir or"
 					+ " builddir attribute.  These may not be mixed");
-		} else if (dirSet == null && (sourceDirectory == null || clsDirectory == null)) {
+		} else if (holder.dirSet == null && (holder.sourceDirectory == null || holder.clsDirectory == null)) {
 			throw new BuildException("analysisITem does not have a nested "
 					+ "dirset, then it must have both srcdir and builddir "
 					+ "attributes");
 		}
 	}
 
-	/**
-	 * Gets the source directory.
-	 * 
-	 * @return the source directory
-	 */
-	public File getSourceDirectory() {
-		return sourceDirectory;
-	}
 
-	/**
-	 * Gets the builds the directory.
-	 * 
-	 * @return the builds the directory
-	 */
-	public File getBuildDirectory() {
-		return clsDirectory;
-	}
 
-	/**
-	 * Gets a combined set of source and build directories.
-	 * 
-	 * @return the directories
-	 */
-	public DirSet getDirSet() {
-		return dirSet;
-	}
 
-	/**
-	 * @return true if the DirSet should be used instead of source and build
-	 * directories
-	 */
-	public boolean useDirSet() {
-		return dirSetAdded;
-	}
 
-	public List<File> getDirectories() {
-		List<File> dirs = new ArrayList<File>();
-		if (dirSet != null) {
-			Iterator<?> it = dirSet.iterator();
-			while (it.hasNext()) {
-				Object o = it.next();
-				if (o instanceof FileResource) {
-					File file = ((FileResource)o).getFile();
-					dirs.add(file);
+
+
+
+	public static class AnalysisHolder {
+
+		/** The source directory. */
+		private File sourceDirectory;
+
+		/** The cls directory. */
+		private File clsDirectory;
+
+		/** Both source and cls directories */
+		private DirSet dirSet;
+		private boolean dirSetAdded;
+
+		private AnalysisHolder() {
+
+		}
+
+		public List<File> getDirectories() {
+			List<File> dirs = new ArrayList<File>();
+			if (dirSet != null) {
+				Iterator<?> it = dirSet.iterator();
+				while (it.hasNext()) {
+					Object o = it.next();
+					if (o instanceof FileResource) {
+						File file = ((FileResource) o).getFile();
+						dirs.add(file);
+					}
 				}
 			}
+			return dirs;
 		}
-		return dirs;
+
+		/**
+		 * @return true if the DirSet should be used instead of source and build
+		 *         directories
+		 */
+		public boolean useDirSet() {
+			return dirSetAdded;
+		}
+
+		/**
+		 * Gets the source directory.
+		 * 
+		 * @return the source directory
+		 */
+		public File getSourceDirectory() {
+			return sourceDirectory;
+		}
+
+		/**
+		 * Gets the builds the directory.
+		 * 
+		 * @return the builds the directory
+		 */
+		public File getBuildDirectory() {
+			return clsDirectory;
+		}
+
+		/**
+		 * Gets a combined set of source and build directories.
+		 * 
+		 * @return the directories
+		 */
+		public DirSet getDirSet() {
+			return dirSet;
+		}
+
 	}
 
 }

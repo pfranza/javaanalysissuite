@@ -5,7 +5,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License. 
+ * under the License.
  * 
  * @author peter.franza
  * 
@@ -21,7 +21,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.DirSet;
 
 import com.peterfranza.staticanalysis.Analysis;
-import com.peterfranza.staticanalysis.AnalysisItem;
+import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
 import com.peterfranza.staticanalysis.tools.tasks.JDependTask;
 import com.peterfranza.staticanalysis.tools.tasks.JDependTask.FormatAttribute;
 
@@ -29,11 +29,12 @@ import com.peterfranza.staticanalysis.tools.tasks.JDependTask.FormatAttribute;
  * The Class JDependTool.
  */
 public class JDependTool implements AnalysisToolInterface {
-	
+
 	/* (non-Javadoc)
 	 * @see com.peterfranza.staticanalysis.tools.AnalysisToolInterface#analyze(com.peterfranza.staticanalysis.Analysis, org.apache.tools.ant.Project, java.util.List)
 	 */
-	public void analyze(Analysis analysis, Project project, List<AnalysisItem> items) {
+	public void analyze(Analysis analysis, Project project,
+			List<AnalysisHolder> items) {
 		JDependTask task = new JDependTask();
 		task.setProject(project);
 		task.setOutputFile(analysis.createReportFileHandle("jdepend.xml"));
@@ -43,8 +44,8 @@ public class JDependTool implements AnalysisToolInterface {
 		task.setFormat(new FormatAttribute(){{
 			setValue("xml");
 		}});
-		
-		for(AnalysisItem item: items) {
+
+		for (AnalysisHolder item : items) {
 			if (item.useDirSet()) {
 				task.createSourcespath().addDirset(item.getDirSet());
 				task.createClassespath().addDirset(item.getDirSet());
@@ -55,14 +56,14 @@ public class JDependTool implements AnalysisToolInterface {
 				task.createSourcespath().addDirset(createDirSetFromFile(item.getSourceDirectory()));
 			}
 		}
-		
+
 		task.perform();
 	}
-	
+
 	private DirSet createDirSetFromFile(File f) {
 		DirSet d2 = new DirSet();
 		d2.setDir(f);
 		return d2;
 	}
-	
+
 }

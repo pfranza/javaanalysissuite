@@ -5,7 +5,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License. 
+ * under the License.
  * 
  * @author peter.franza
  * 
@@ -20,7 +20,7 @@ import java.util.List;
 import org.apache.tools.ant.Project;
 
 import com.peterfranza.staticanalysis.Analysis;
-import com.peterfranza.staticanalysis.AnalysisItem;
+import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
 
 import edu.umd.cs.findbugs.anttask.FindBugsTask;
 
@@ -32,19 +32,20 @@ public class FindBugsTool implements AnalysisToolInterface {
 	/* (non-Javadoc)
 	 * @see com.peterfranza.staticanalysis.tools.AnalysisToolInterface#analyze(com.peterfranza.staticanalysis.Analysis, org.apache.tools.ant.Project, java.util.List)
 	 */
-	public void analyze(Analysis analysis, Project project, List<AnalysisItem> items) {
+	public void analyze(Analysis analysis, Project project,
+			List<AnalysisHolder> items) {
 		FindBugsTask task = new FindBugsTask();
 		task.setProject(project);
-		task.setHome(new File(analysis.getLibraryRoot(), "findbugs"));	
-	
+		task.setHome(new File(analysis.getLibraryRoot(), "findbugs"));
+
 		task.setOutput("xml");
 		task.setOutputFile(analysis.createReportFileHandle("findbugs.xml").getAbsolutePath());
 		task.setJvmargs("-Xmx" + analysis.getMaxMem());
 		task.setTimeout(20 * 60 * 1000);
 		task.setEffort("min");
-		
-		
-		for(AnalysisItem item: items) {
+
+
+		for (AnalysisHolder item : items) {
 			if (item.useDirSet()) {
 				for(File file: item.getDirectories()) {
 					addDirectories(task, file, file);
@@ -53,13 +54,13 @@ public class FindBugsTool implements AnalysisToolInterface {
 				addDirectories(task, item.getSourceDirectory(), item.getBuildDirectory());
 			}
 		}
-		
-		task.perform();		
+
+		task.perform();
 	}
 
 	private void addDirectories(FindBugsTask task, File src, File build) {
 		task.createClass().setLocation(build);
 		task.createSourcePath().setLocation(src);
 	}
-	
+
 }
