@@ -29,6 +29,12 @@ import edu.umd.cs.findbugs.anttask.FindBugsTask;
  */
 public class FindBugsTool implements AnalysisToolInterface {
 
+	private File excludeFile;
+
+	public FindBugsTool(File resolveFile) {
+		this.excludeFile = resolveFile;
+	}
+
 	/* (non-Javadoc)
 	 * @see com.peterfranza.staticanalysis.tools.AnalysisToolInterface#analyze(com.peterfranza.staticanalysis.Analysis, org.apache.tools.ant.Project, java.util.List)
 	 */
@@ -43,6 +49,10 @@ public class FindBugsTool implements AnalysisToolInterface {
 		task.setJvmargs("-Xmx" + analysis.getMaxMem());
 		task.setTimeout(20 * 60 * 1000);
 		task.setEffort("min");
+		
+		if(excludeFile != null) {
+			task.setExcludeFilter(excludeFile);
+		}
 
 
 		for (AnalysisHolder item : items) {

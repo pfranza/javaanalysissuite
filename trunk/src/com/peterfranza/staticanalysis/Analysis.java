@@ -27,6 +27,7 @@ import com.peterfranza.staticanalysis.tools.CpdTool;
 import com.peterfranza.staticanalysis.tools.FindBugsTool;
 import com.peterfranza.staticanalysis.tools.JDependTool;
 import com.peterfranza.staticanalysis.tools.PmdTool;
+import com.peterfranza.staticanalysis.tools.TestabilityExplorerTool;
 
 /**
  * The Class Analysis.
@@ -58,6 +59,8 @@ public class Analysis extends Task {
 	/** The cpd min tokens. */
 	private String cpdMinTokens = "100";
 
+	private String findbugsExclude;
+
 	/**
 	 * Sets the basename.
 	 * 
@@ -76,6 +79,10 @@ public class Analysis extends Task {
 		pmdRuleSets = rulesets;
 	}
 
+	public void setFindbugsexcludes(String findbugsExclude) {
+		this.findbugsExclude = findbugsExclude;
+	}
+	
 	/**
 	 * Sets the checkstyleconfig.
 	 * 
@@ -189,8 +196,10 @@ public class Analysis extends Task {
 				pmdRuleSets));
 		
 		tools.add(createToolInstance(CpdTool.class));
-		tools.add(createToolInstance(FindBugsTool.class));
+		tools.add(new FindBugsTool(findbugsExclude == null ? null : getProject().resolveFile(findbugsExclude)));
 		tools.add(createToolInstance(JDependTool.class));
+		tools.add(new TestabilityExplorerTool(
+				createReportFileHandle("testabilityexplorer.xml")));
 
 		// // tools.add(new JavaNCssTool(new File(parent, baseFilename
 		// +"ncss.xml")));
