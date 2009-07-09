@@ -1,6 +1,6 @@
 <project name="Analysis" default="analyze">
 		
-	<property name="product.version" value="0.9"/>
+	<property name="product.version" value="0.9.1"/>
 	<property name="src.dir" value="${basedir}/src"/>
 	<property name="classes.dir" value="${basedir}/classes"/>
 	<property name="jar.name" value="jAnalysisSuite-${product.version}.jar" />
@@ -53,11 +53,15 @@
         <addAnalysisItem srcdir="${src.dir}" builddir="${classes.dir}" />
 		
 	        <!-- run the analysis -->
-	        <performStaticAnalysis  todir="reports" basename="report_" 
-	            checkstyleconfig="${basedir}/libs/checkstyle/checkstyle_checks.xml"
-	            pmdrulesets="rulesets/favorites.xml" maxmem="256m" cpdmintokens="50">
-	        	<!-- <skip tool="FindBugsTool"/> -->
+	        <performStaticAnalysis  todir="reports" basename="report_">
+	        	<checkstyle config="${basedir}/libs/checkstyle/checkstyle_checks.xml"/>
+	        	<cpd mintokens="50" maxmemory="64m"/>
+	        	<jdepend />
+	        	<testabilityexplorer />
+	        	<pmd rules="rulesets/favorites.xml"/>
+	        	<findbugs />	        	
 	        </performStaticAnalysis>
+		
 	</target>
 	
 </project>

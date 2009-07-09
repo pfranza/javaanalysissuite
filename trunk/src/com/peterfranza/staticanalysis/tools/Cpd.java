@@ -31,7 +31,18 @@ import com.peterfranza.staticanalysis.tools.tasks.CPDWrapper.AddMode;
  * 
  * @author Peter.Franza
  */
-public class CpdTool extends AbstractAnalysisTool {
+public class Cpd extends AbstractAnalysisTool {
+
+	private String maxMemory = "64m";
+	private String minTokens = "100";
+	
+	public String getMinTokens() {
+		return minTokens;
+	}
+
+	public void setMinTokens(String minTokens) {
+		this.minTokens = minTokens;
+	}
 
 	/* (non-Javadoc)
 	 * @see com.peterfranza.staticanalysis.tools.AnalysisToolInterface#analyze(com.peterfranza.staticanalysis.Analysis, org.apache.tools.ant.Project, java.util.List)
@@ -44,9 +55,9 @@ public class CpdTool extends AbstractAnalysisTool {
 		commandline.createClasspath(project).setLocation(new File(analysis.getLibraryRoot() + "/pmd/pmd-4.2.5.jar"));
 		commandline.createClasspath(project).setLocation(analysis.getLibraryRoot());
 		commandline.createArgument().setFile(analysis.createReportFileHandle("cpd.xml"));
-		commandline.createArgument().setValue(analysis.getCpdMinTokens());
+		commandline.createArgument().setValue(getMinTokens());
 
-		commandline.setMaxmemory(analysis.getMaxMem());
+		commandline.setMaxmemory(getMaxMemory());
 
 		for (AnalysisHolder item : items) {
 			if (item.useDirSet()) {
@@ -70,6 +81,14 @@ public class CpdTool extends AbstractAnalysisTool {
 			e.printStackTrace();
 		}
 
+	}
+
+	public String getMaxMemory() {
+		return maxMemory;
+	}
+
+	public void setMaxMemory(String maxMemory) {
+		this.maxMemory = maxMemory;
 	}
 
 }

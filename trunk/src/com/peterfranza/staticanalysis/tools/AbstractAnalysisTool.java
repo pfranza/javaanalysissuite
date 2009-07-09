@@ -19,6 +19,7 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.FileSet;
 
 import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
@@ -29,7 +30,7 @@ import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
  * 
  * @author Craig.McIlwee
  */
-public abstract class AbstractAnalysisTool implements AnalysisToolInterface {
+public abstract class AbstractAnalysisTool extends DataType implements AnalysisToolInterface {
 
 	/**
 	 * Get all of the AnalysisItem's FileSets.
