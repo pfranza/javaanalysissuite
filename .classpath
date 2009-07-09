@@ -10,5 +10,9 @@
 	<classpathentry kind="lib" path="/usr/share/java/ant.jar"/>
 	<classpathentry kind="lib" path="libs/checkstyle/checkstyle-all-5.0.jar"/>
 	<classpathentry kind="lib" path="libs/pmd/pmd-4.2.5.jar"/>
+	<classpathentry kind="lib" path="libs/junit/junit-4.6.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java/ant/ant-junit.jar"/>
+	<classpathentry kind="lib" path="libs/emma/emma_ant.jar"/>
+	<classpathentry kind="lib" path="libs/emma/emma.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
