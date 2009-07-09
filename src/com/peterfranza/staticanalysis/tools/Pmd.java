@@ -14,45 +14,45 @@
  */
 package com.peterfranza.staticanalysis.tools;
 
-import java.io.File;
 import java.util.List;
+
+import net.sourceforge.pmd.ant.Formatter;
+import net.sourceforge.pmd.ant.PMDTask;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 
 import com.peterfranza.staticanalysis.Analysis;
 import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
-import com.puppycrawl.tools.checkstyle.CheckStyleTask;
-import com.puppycrawl.tools.checkstyle.CheckStyleTask.Formatter;
-import com.puppycrawl.tools.checkstyle.CheckStyleTask.FormatterType;
 
 /**
- * The Class CheckStyleTool.
+ * The Class PmdTool.
  */
-public class CheckStyleTool extends AbstractAnalysisTool {
+public class Pmd extends AbstractAnalysisTool {
 
-	private final File report;
-	private final File configFile;
+	private String reportFile;
+	private String rules = "rulesets/favorites.xml";
 
-	/**
-	 * Instantiates a new check style tool.
-	 * 
-	 * @param report the report
-	 * @param configFile the config file
-	 */
-	public CheckStyleTool(File report, File configFile) {
-		this.report = report;
-		this.configFile = configFile;
+
+	public String getRules() {
+		return rules;
 	}
+
+
+	public void setRules(String rules) {
+		this.rules = rules;
+	}
+
 
 	/* (non-Javadoc)
 	 * @see com.peterfranza.staticanalysis.tools.AnalysisToolInterface#analyze(com.peterfranza.staticanalysis.Analysis, org.apache.tools.ant.Project, java.util.List)
 	 */
 	public void analyze(Analysis analysis, Project project,
 			List<AnalysisHolder> items) {
-
-		CheckStyleTask task = new CheckStyleTask();
+		PMDTask task = new PMDTask();
 		task.setProject(project);
+		task.setShortFilenames(true);
+		task.setRuleSetFiles(rules);
 
 		for (AnalysisHolder item : items) {
 			List<FileSet> fileSets = getSourceFileSets(item);
@@ -61,20 +61,17 @@ public class CheckStyleTool extends AbstractAnalysisTool {
 			}
 		}
 
-		FormatterType type = new FormatterType();
-		type.setValue("xml");
-
 		Formatter format = new Formatter();
-		format.setType(type);
-		format.setTofile(report);
+		format.setToFile(analysis.createReportFileHandle(reportFile).getAbsoluteFile());
+		format.setType("xml");
 
-
-		task.setConfig(configFile);
-
-		task.setFailOnViolation(false);
 		task.addFormatter(format);
+		task.setFailOnError(false);
+		task.setFailOnRuleViolation(false);
 		task.perform();
-	}
 
+	}
+	
+	
 
 }

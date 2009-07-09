@@ -10,14 +10,10 @@ import com.google.ant.TestabilityTask;
 import com.peterfranza.staticanalysis.Analysis;
 import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
 
-public class TestabilityExplorerTool extends AbstractAnalysisTool {
+public class TestabilityExplorer extends AbstractAnalysisTool {
 
-	private final String resultsFile;
+	private String resultsFile = "testabilityexplorer.xml";
 	
-	public TestabilityExplorerTool(File file) {
-		this.resultsFile = file.getAbsolutePath();
-		
-	}
 	
 	public void analyze(Analysis analysis, Project project,
 			List<AnalysisHolder> items) {
@@ -25,12 +21,10 @@ public class TestabilityExplorerTool extends AbstractAnalysisTool {
 		TestabilityTask task = new TestabilityTask();
 			task.setProject(project);
 			
-			task.setResultFile(resultsFile);
+			task.setResultFile(analysis.createReportFileHandle(resultsFile).getAbsolutePath());
 			task.setErrorFile("System.err");
 			task.setPrint("xml");
 
-//			task.setFilter("com.peterfranza");
-			
 			for (AnalysisHolder item : items) {
 				if(item.useDirSet()) {
 					throw new RuntimeException("dirSet not implemented for TestabilityTask .. yet");

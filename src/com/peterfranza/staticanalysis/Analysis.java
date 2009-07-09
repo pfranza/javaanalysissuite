@@ -22,12 +22,12 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
 import com.peterfranza.staticanalysis.tools.AnalysisToolInterface;
-import com.peterfranza.staticanalysis.tools.CheckStyleTool;
-import com.peterfranza.staticanalysis.tools.CpdTool;
-import com.peterfranza.staticanalysis.tools.FindBugsTool;
-import com.peterfranza.staticanalysis.tools.JDependTool;
-import com.peterfranza.staticanalysis.tools.PmdTool;
-import com.peterfranza.staticanalysis.tools.TestabilityExplorerTool;
+import com.peterfranza.staticanalysis.tools.CheckStyle;
+import com.peterfranza.staticanalysis.tools.Cpd;
+import com.peterfranza.staticanalysis.tools.FindBugs;
+import com.peterfranza.staticanalysis.tools.JDepend;
+import com.peterfranza.staticanalysis.tools.Pmd;
+import com.peterfranza.staticanalysis.tools.TestabilityExplorer;
 
 /**
  * The Class Analysis.
@@ -38,28 +38,12 @@ public class Analysis extends Task {
 
 	/** The tools. */
 	private List<AnalysisToolInterface> tools = new ArrayList<AnalysisToolInterface>();
-
-	private List<Skip> skip = new ArrayList<Skip>(); 
-	
-	/** The pmd rule sets. */
-	private String pmdRuleSets = "rulesets/favorites.xml";
-	
-	/** The check style config. */
-	private String checkStyleConfig = "libs/checkstyle/checkstyle_checks.xml";
 	
 	/** The base filename. */
 	private String baseFilename = "analysis_";
 	
 	/** The parent. */
 	private File parent;
-
-	/** The maxmem. */
-	private String maxmem = "256m";
-
-	/** The cpd min tokens. */
-	private String cpdMinTokens = "100";
-
-	private String findbugsExclude;
 
 	/**
 	 * Sets the basename.
@@ -71,28 +55,6 @@ public class Analysis extends Task {
 	}
 
 	/**
-	 * Sets the pmdrulesets.
-	 * 
-	 * @param rulesets the new pmdrulesets
-	 */
-	public void setPmdrulesets(String rulesets) {
-		pmdRuleSets = rulesets;
-	}
-
-	public void setFindbugsexcludes(String findbugsExclude) {
-		this.findbugsExclude = findbugsExclude;
-	}
-	
-	/**
-	 * Sets the checkstyleconfig.
-	 * 
-	 * @param config the new checkstyleconfig
-	 */
-	public void setCheckstyleconfig(File config) {
-		checkStyleConfig = config.getAbsolutePath();
-	}
-
-	/**
 	 * Sets the todir.
 	 * 
 	 * @param parent the new todir
@@ -101,23 +63,6 @@ public class Analysis extends Task {
 		this.parent = parent;
 	}
 
-	/**
-	 * Sets the jvmargs.
-	 * 
-	 * @param s the new jvmargs
-	 */
-	public void setMaxmem(String s) {
-		this.maxmem = s;
-	}
-
-	/**
-	 * Gets the jvm args.
-	 * 
-	 * @return the jvm args
-	 */
-	public String getMaxMem() {
-		return maxmem;
-	}
 
 	/* (non-Javadoc)
 	 * @see org.apache.tools.ant.Task#init()
@@ -138,8 +83,6 @@ public class Analysis extends Task {
 	@Override
 	public void execute() throws BuildException {
 
-		initializeTools();
-		
 		final long start = System.currentTimeMillis();
 
 		if (AnalysisItem.getAnalysisItems().isEmpty()) {
@@ -150,13 +93,9 @@ public class Analysis extends Task {
 		System.out.println("Starting Analysis");
 		
 		for (AnalysisToolInterface t : tools) {
-			if(!isSkipped(t)) {
 				System.out.println("Running: " + t.getClass().getSimpleName());
 				t.analyze(this, getProject().createSubProject(), AnalysisItem
 						.getAnalysisItems());
-			} else {
-				System.out.println("Skipping: " + t.getClass().getSimpleName());
-			}
 		}
 
 		final long end = System.currentTimeMillis();
@@ -164,46 +103,35 @@ public class Analysis extends Task {
 				+ " seconds.");
 
 		super.execute();
-	}
-
-	private boolean isSkipped(AnalysisToolInterface t) {
-		for(Skip s: skip) {
-			if(s.shouldSkip(t)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Adds the skip.
-	 * 
-	 * @param s the s
-	 */
-	public void addSkip(Skip s) {
-		skip.add(s);
+	}	
+	
+	public void addCpd(Cpd tool) {
+		tools.add(tool);
 	}
 	
-	/**
-	 * Initialize tools.
-	 */
-	private void initializeTools() {
-		tools.add(new CheckStyleTool(
-				createReportFileHandle("checkstyle.xml"),
-				getProject().resolveFile(checkStyleConfig)));
-		
-		tools.add(new PmdTool(createReportFileHandle("pmd.xml"),
-				pmdRuleSets));
-		
-		tools.add(createToolInstance(CpdTool.class));
-		tools.add(new FindBugsTool(findbugsExclude == null ? null : getProject().resolveFile(findbugsExclude)));
-		tools.add(createToolInstance(JDependTool.class));
-		tools.add(new TestabilityExplorerTool(
-				createReportFileHandle("testabilityexplorer.xml")));
-
-		// // tools.add(new JavaNCssTool(new File(parent, baseFilename
-		// +"ncss.xml")));
+	public void addJDepend(JDepend tool) {
+		tools.add(tool);
 	}
+	
+	public void addTestabilityExplorer(TestabilityExplorer tool) {
+		tools.add(tool);
+	}
+	
+	public void addPmd(Pmd tool) {
+		tools.add(tool);
+	}
+	
+	public void addCheckstyle(CheckStyle tool) {
+		tools.add(tool);
+	}
+	
+	public void addFindBugs(FindBugs tool) {
+		tools.add(tool);
+	}
+	
+//	public void addJavaNCss(JavaNCss tool) {
+//		tools.add(tool);
+//	}
 
 	/**
 	 * Gets the library root.
@@ -237,37 +165,5 @@ public class Analysis extends Task {
 		}
 	}
 
-	/**
-	 * Creates the tool instance.
-	 * 
-	 * @param s the s
-	 * 
-	 * @return the t
-	 */
-	private <T extends AnalysisToolInterface> T createToolInstance(Class<T> s) {
-		try {
-			return s.newInstance();
-		} catch (Exception e) {
-			throw new BuildException(e);
-		}
-	}
-
-	/**
-	 * Gets the cpd min tokens.
-	 * 
-	 * @return the cpd min tokens
-	 */
-	public String getCpdMinTokens() {
-		return cpdMinTokens;
-	}
-	
-	/**
-	 * Sets the cpdmintokens.
-	 * 
-	 * @param c the new cpdmintokens
-	 */
-	public void setCpdmintokens(String c) {
-		cpdMinTokens = c;
-	}
 
 }

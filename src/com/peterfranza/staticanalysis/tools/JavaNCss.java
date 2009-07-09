@@ -14,7 +14,6 @@
  */
 package com.peterfranza.staticanalysis.tools;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,18 +25,10 @@ import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
 /**
  * The Class JavaNCssTool.
  */
-public class JavaNCssTool implements AnalysisToolInterface {
+public class JavaNCss implements AnalysisToolInterface {
 
-	private final File reportFile;
+	private final String reportFile = "javancss.xml";
 
-	/**
-	 * Instantiates a new java n css tool.
-	 * 
-	 * @param reportFile the report file
-	 */
-	public JavaNCssTool(File reportFile) {
-		this.reportFile = reportFile;
-	}
 
 	/* (non-Javadoc)
 	 * @see com.peterfranza.staticanalysis.tools.AnalysisToolInterface#analyze(com.peterfranza.staticanalysis.Analysis, org.apache.tools.ant.Project, java.util.List)
@@ -49,7 +40,7 @@ public class JavaNCssTool implements AnalysisToolInterface {
 		arg.add("-all");
 		arg.add("-recursive");
 		arg.add("-out");
-		arg.add(reportFile.getAbsolutePath());
+		arg.add(analysis.createReportFileHandle(reportFile).getAbsolutePath());
 		for (AnalysisHolder item : items) {
 			arg.add(item.getSourceDirectory().getAbsolutePath());
 		}
