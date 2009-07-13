@@ -30,7 +30,7 @@ import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
  */
 public class Pmd extends AbstractAnalysisTool {
 
-	private String reportFile;
+	private final String reportFile = "pmd.xml";
 	private String rules = "rulesets/favorites.xml";
 
 
@@ -71,7 +71,7 @@ public class Pmd extends AbstractAnalysisTool {
 		task.perform();
 
 	}
-	
-	
+
+
 
 }

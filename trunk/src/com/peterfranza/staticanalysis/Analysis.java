@@ -27,6 +27,7 @@ import com.peterfranza.staticanalysis.tools.Cpd;
 import com.peterfranza.staticanalysis.tools.Emma;
 import com.peterfranza.staticanalysis.tools.FindBugs;
 import com.peterfranza.staticanalysis.tools.JDepend;
+import com.peterfranza.staticanalysis.tools.JUnit;
 import com.peterfranza.staticanalysis.tools.Pmd;
 import com.peterfranza.staticanalysis.tools.TestabilityExplorer;
 
@@ -139,9 +140,10 @@ public class Analysis extends Task {
 		tools.add(tool);
 	}
 
-	//	public void addJavaNCss(JavaNCss tool) {
-	//		tools.add(tool);
-	//	}
+	public void addJUnit(JUnit tool) {
+		tools.add(tool);
+	}
+
 
 	/**
 	 * Gets the library root.
