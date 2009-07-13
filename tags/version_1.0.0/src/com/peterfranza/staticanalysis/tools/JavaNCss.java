@@ -1,0 +1,51 @@
+/*
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ * 
+ * @author peter.franza
+ * 
+ * Copyright (c) 2009 Open Roads Consulting, Inc. All rights reserved.
+ * 
+ */
+package com.peterfranza.staticanalysis.tools;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.tools.ant.Project;
+
+import com.peterfranza.staticanalysis.Analysis;
+import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
+
+/**
+ * The Class JavaNCssTool.
+ */
+public class JavaNCss extends AbstractAnalysisTool {
+
+	private final String reportFile = "javancss.xml";
+
+
+	/* (non-Javadoc)
+	 * @see com.peterfranza.staticanalysis.tools.AnalysisToolInterface#analyze(com.peterfranza.staticanalysis.Analysis, org.apache.tools.ant.Project, java.util.List)
+	 */
+	public void analyze(Analysis analysis, Project project,
+			List<AnalysisHolder> items) {
+		List<String> arg = new ArrayList<String>();
+		arg.add("-xml");
+		arg.add("-all");
+		arg.add("-recursive");
+		arg.add("-out");
+		arg.add(analysis.createReportFileHandle(reportFile).getAbsolutePath());
+		for (AnalysisHolder item : items) {
+			arg.add(item.getSourceDirectory().getAbsolutePath());
+		}
+
+		javancss.Main.main(arg.toArray(new String[arg.size()]));
+	}
+
+}

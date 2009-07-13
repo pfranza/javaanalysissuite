@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="classes" path="src"/>
+	<classpathentry kind="src" path="tests"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="libs/findbugs/findbugs-ant.jar"/>
+	<classpathentry kind="lib" path="libs/javancss/javancss.jar"/>
+	<classpathentry kind="lib" path="libs/jdepend/jdepend-2.9.jar"/>
+	<classpathentry kind="lib" path="libs/testabilityexplorer/ant-testability-explorer-1.3.0-r275.jar"/>
+	<classpathentry kind="lib" path="libs/testabilityexplorer/testability-explorer-1.3.0-r275.jar"/>
+	<classpathentry kind="lib" path="libs/checkstyle/checkstyle-all-5.0.jar"/>
+	<classpathentry kind="lib" path="libs/pmd/pmd-4.2.5.jar"/>
+	<classpathentry kind="lib" path="libs/junit/junit-4.6.jar"/>
+	<classpathentry kind="lib" path="libs/emma/emma_ant.jar"/>
+	<classpathentry kind="lib" path="libs/emma/emma.jar"/>
+	<classpathentry kind="lib" path="C:/apache-ant-1.7.1/lib/ant-junit.jar"/>
+	<classpathentry kind="lib" path="C:/apache-ant-1.7.1/lib/ant.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
