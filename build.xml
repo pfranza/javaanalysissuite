@@ -59,7 +59,8 @@
 	        	<jdepend />
 	        	<testabilityexplorer />
 	        	<pmd/>
-	        	<findbugs />	        	
+	        	<findbugs />	    
+	        	<emma filter="com.orci.*"/>
 	        </performStaticAnalysis>
 		
 	</target>

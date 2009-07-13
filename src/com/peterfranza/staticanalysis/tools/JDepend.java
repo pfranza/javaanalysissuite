@@ -28,7 +28,7 @@ import com.peterfranza.staticanalysis.tools.tasks.JDependTask.FormatAttribute;
 /**
  * The Class JDependTool.
  */
-public class JDepend implements AnalysisToolInterface {
+public class JDepend extends AbstractAnalysisTool {
 
 	/* (non-Javadoc)
 	 * @see com.peterfranza.staticanalysis.tools.AnalysisToolInterface#analyze(com.peterfranza.staticanalysis.Analysis, org.apache.tools.ant.Project, java.util.List)

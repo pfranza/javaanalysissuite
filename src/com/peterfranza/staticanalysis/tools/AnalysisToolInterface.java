@@ -36,4 +36,17 @@ public interface AnalysisToolInterface {
 	 * @param items the items
 	 */
 	void analyze(Analysis analysis, Project project, List<AnalysisHolder> items);
+
+	/**
+	 * Post analyze.
+	 * 
+	 * @param analysis
+	 *            the analysis
+	 * @param project
+	 *            the project
+	 * @param items
+	 *            the items
+	 */
+	void postAnalyze(Analysis analysis, Project project,
+			List<AnalysisHolder> items);
 }

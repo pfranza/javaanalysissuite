@@ -27,7 +27,7 @@ import edu.umd.cs.findbugs.anttask.FindBugsTask;
 /**
  * The Class FindBugsTool.
  */
-public class FindBugs implements AnalysisToolInterface {
+public class FindBugs extends AbstractAnalysisTool {
 
 	private File excludes;
 	private String maxMem = "64m";

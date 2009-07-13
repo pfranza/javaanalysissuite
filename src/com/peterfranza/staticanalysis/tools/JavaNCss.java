@@ -25,7 +25,7 @@ import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
 /**
  * The Class JavaNCssTool.
  */
-public class JavaNCss implements AnalysisToolInterface {
+public class JavaNCss extends AbstractAnalysisTool {
 
 	private final String reportFile = "javancss.xml";
 

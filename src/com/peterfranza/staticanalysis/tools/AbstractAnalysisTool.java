@@ -19,9 +19,11 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.FileSet;
 
+import com.peterfranza.staticanalysis.Analysis;
 import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
 
 /**
@@ -137,6 +139,11 @@ public abstract class AbstractAnalysisTool extends DataType implements AnalysisT
 		public boolean accept(File dir, String name) {
 			return name.endsWith(extension);
 		}
+
+	}
+
+	public void postAnalyze(Analysis analysis, Project project,
+			List<AnalysisHolder> items) {
 
 	}
 
