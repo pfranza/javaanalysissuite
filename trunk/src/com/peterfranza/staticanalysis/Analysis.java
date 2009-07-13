@@ -5,7 +5,7 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License. 
+ * under the License.
  * 
  * @author peter.franza
  * 
@@ -24,6 +24,7 @@ import org.apache.tools.ant.Task;
 import com.peterfranza.staticanalysis.tools.AnalysisToolInterface;
 import com.peterfranza.staticanalysis.tools.CheckStyle;
 import com.peterfranza.staticanalysis.tools.Cpd;
+import com.peterfranza.staticanalysis.tools.Emma;
 import com.peterfranza.staticanalysis.tools.FindBugs;
 import com.peterfranza.staticanalysis.tools.JDepend;
 import com.peterfranza.staticanalysis.tools.Pmd;
@@ -37,11 +38,11 @@ import com.peterfranza.staticanalysis.tools.TestabilityExplorer;
 public class Analysis extends Task {
 
 	/** The tools. */
-	private List<AnalysisToolInterface> tools = new ArrayList<AnalysisToolInterface>();
-	
+	private final List<AnalysisToolInterface> tools = new ArrayList<AnalysisToolInterface>();
+
 	/** The base filename. */
 	private String baseFilename = "analysis_";
-	
+
 	/** The parent. */
 	private File parent;
 
@@ -91,47 +92,56 @@ public class Analysis extends Task {
 		}
 
 		System.out.println("Starting Analysis");
-		
+
 		for (AnalysisToolInterface t : tools) {
-				System.out.println("Running: " + t.getClass().getSimpleName());
-				t.analyze(this, getProject().createSubProject(), AnalysisItem
-						.getAnalysisItems());
+			System.out.println("Running: " + t.getClass().getSimpleName());
+			t.analyze(this, getProject().createSubProject(), AnalysisItem
+					.getAnalysisItems());
 		}
 
 		final long end = System.currentTimeMillis();
-		System.out.println("Analysis took: " + ((end - start) / 1000)
+		System.out.println("Analysis took: " + (end - start) / 1000
 				+ " seconds.");
 
+		for (AnalysisToolInterface t : tools) {
+			t.postAnalyze(this, getProject().createSubProject(), AnalysisItem
+					.getAnalysisItems());
+		}
+
 		super.execute();
-	}	
-	
+	}
+
 	public void addCpd(Cpd tool) {
 		tools.add(tool);
 	}
-	
+
 	public void addJDepend(JDepend tool) {
 		tools.add(tool);
 	}
-	
+
 	public void addTestabilityExplorer(TestabilityExplorer tool) {
 		tools.add(tool);
 	}
-	
+
 	public void addPmd(Pmd tool) {
 		tools.add(tool);
 	}
-	
+
 	public void addCheckstyle(CheckStyle tool) {
 		tools.add(tool);
 	}
-	
+
 	public void addFindBugs(FindBugs tool) {
 		tools.add(tool);
 	}
-	
-//	public void addJavaNCss(JavaNCss tool) {
-//		tools.add(tool);
-//	}
+
+	public void addEmma(Emma tool) {
+		tools.add(tool);
+	}
+
+	//	public void addJavaNCss(JavaNCss tool) {
+	//		tools.add(tool);
+	//	}
 
 	/**
 	 * Gets the library root.
@@ -153,7 +163,7 @@ public class Analysis extends Task {
 		createFolder(parent);
 		return new File(parent, baseFilename + name);
 	}
-	
+
 	/**
 	 * Creates the folder.
 	 * 
