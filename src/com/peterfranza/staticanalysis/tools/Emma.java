@@ -13,6 +13,7 @@ import com.vladium.emma.emmaTask;
 import com.vladium.emma.ant.XFileSet;
 import com.vladium.emma.ant.VerbosityCfg.VerbosityAttribute;
 import com.vladium.emma.instr.instrTask;
+import com.vladium.emma.instr.FilterCfg.filterElement;
 import com.vladium.emma.instr.instrTask.ModeAttribute;
 import com.vladium.emma.report.reportTask;
 
@@ -54,13 +55,13 @@ public class Emma extends AbstractAnalysisTool {
 				instr.setInstrpath(new Path(project, h.getBuildDirectory()
 						.getAbsolutePath()));
 
-				// if (getFilter() != null) {
-				// filterElement filt = instr.createFilter();
-				// filt.setIncludes(getFilter());
-				// }
+				if (getFilter() != null) {
+					filterElement filt = instr.createFilter();
+					filt.setIncludes(getFilter());
+				}
 
 				metaDatas.add(metaData);
-				System.out.println("added meta " + metaData);
+
 			}
 
 		}
