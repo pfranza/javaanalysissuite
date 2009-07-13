@@ -25,47 +25,43 @@ public class Emma extends AbstractAnalysisTool {
 	public void analyze(Analysis analysis, Project project,
 			List<AnalysisHolder> items) {
 
-		try {
-			emmaTask task = new emmaTask();
-			task.setProject(project);
-			task.init();
-			task.setTaskName("Emma Coverage");
-			task.setEnabled(true);
+		emmaTask task = new emmaTask();
+		task.setProject(project);
+		task.init();
+		task.setTaskName("Emma Coverage");
+		task.setEnabled(true);
 
-			VerbosityAttribute verbosity = new VerbosityAttribute();
-			verbosity.setValue("quiet");
+		VerbosityAttribute verbosity = new VerbosityAttribute();
+		verbosity.setValue("quiet");
+		task.setVerbosity(verbosity);
 
-			task.setVerbosity(verbosity);
+		for (AnalysisHolder h : items) {
 
-			for (AnalysisHolder h : items) {
+			instrTask instr = (instrTask) task.createInstr();
+			instr.setMerge(true);
 
-				instrTask instr = (instrTask) task.createInstr();
-				instr.setMerge(true);
+			ModeAttribute mode = new ModeAttribute();
+			mode.setValue("overwrite");
+			instr.setMode(mode);
 
-				ModeAttribute mode = new ModeAttribute();
-				mode.setValue("overwrite");
-				instr.setMode(mode);
+			File metaData = analysis.createReportFileHandle("metadata_"
+					+ h.getSourceDirectory().getAbsolutePath().hashCode()
+					+ ".emma");
 
-				File metaData = analysis.createReportFileHandle("metadata_"
-						+ h.getSourceDirectory().getAbsolutePath().hashCode()
-						+ ".emma");
+			instr.setMetadatafile(metaData);
+			instr.setInstrpath(new Path(project, h.getBuildDirectory().getAbsolutePath()));
 
-				instr.setMetadatafile(metaData);
-				instr.setInstrpath(new Path(project, h.getBuildDirectory().getAbsolutePath()));
-
-				if (getFilter() != null) {
-					filterElement filt = instr.createFilter();
-					filt.setIncludes(getFilter());
-				}
-
-				metaDatas.add(metaData);
-
+			if (getFilter() != null) {
+				filterElement filt = instr.createFilter();
+				filt.setIncludes(getFilter());
 			}
 
-			task.perform();
-		} catch (Exception e) {
-			e.printStackTrace();
+			metaDatas.add(metaData);
+
 		}
+
+		task.perform();
+
 	}
 
 	@Override
@@ -76,6 +72,10 @@ public class Emma extends AbstractAnalysisTool {
 		task.setProject(project);
 		task.init();
 		task.setTaskName("Emma Report");
+
+		VerbosityAttribute verbosity = new VerbosityAttribute();
+		verbosity.setValue("quiet");
+		task.setVerbosity(verbosity);
 
 		reportTask report = (reportTask) task.createReport();
 
