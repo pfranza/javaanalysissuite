@@ -12,36 +12,47 @@ import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
 
 public class TestabilityExplorer extends AbstractAnalysisTool {
 
-	private String resultsFile = "testabilityexplorer.xml";
-	
-	
+	private final String resultsFile = "testabilityexplorer.xml";
+	private String filter;
+
+
 	public void analyze(Analysis analysis, Project project,
 			List<AnalysisHolder> items) {
-		
-		TestabilityTask task = new TestabilityTask();
-			task.setProject(project);
-			
-			task.setResultFile(analysis.createReportFileHandle(resultsFile).getAbsolutePath());
-			task.setErrorFile("System.err");
-			task.setPrint("xml");
 
-			for (AnalysisHolder item : items) {
-				if(item.useDirSet()) {
-					throw new RuntimeException("dirSet not implemented for TestabilityTask .. yet");
-				} else {
-					task.addClasspath(asPath(project, item.getBuildDirectory()));
-				}
+		TestabilityTask task = new TestabilityTask();
+		task.setProject(project);
+
+		task.setResultFile(analysis.createReportFileHandle(resultsFile).getAbsolutePath());
+		// task.setErrorFile("System.err");
+		task.setPrint("xml");
+
+		for (AnalysisHolder item : items) {
+			if(item.useDirSet()) {
+				throw new RuntimeException("dirSet not implemented for TestabilityTask .. yet");
+			} else {
+				task.addClasspath(asPath(project, item.getBuildDirectory()));
 			}
-			
-			task.perform();
-		
+		}
+
+		task.setFilter(filter);
+
+		task.perform();
+
 	}
 
 	private Path asPath(Project project, File buildDirectory) {
 		Path path = new Path(project);
-			path.setLocation(buildDirectory);
-			
+		path.setLocation(buildDirectory);
+
 		return path;
+	}
+
+	public synchronized final String getFilter() {
+		return filter;
+	}
+
+	public synchronized final void setFilter(String filter) {
+		this.filter = filter;
 	}
 
 }
