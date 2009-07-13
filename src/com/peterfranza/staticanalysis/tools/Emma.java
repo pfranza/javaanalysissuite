@@ -13,7 +13,6 @@ import com.vladium.emma.emmaTask;
 import com.vladium.emma.ant.XFileSet;
 import com.vladium.emma.ant.VerbosityCfg.VerbosityAttribute;
 import com.vladium.emma.instr.instrTask;
-import com.vladium.emma.instr.FilterCfg.filterElement;
 import com.vladium.emma.instr.instrTask.ModeAttribute;
 import com.vladium.emma.report.reportTask;
 
@@ -35,28 +34,34 @@ public class Emma extends AbstractAnalysisTool {
 		verbosity.setValue("quiet");
 		task.setVerbosity(verbosity);
 
+
+
 		for (AnalysisHolder h : items) {
 
-			instrTask instr = (instrTask) task.createInstr();
-			instr.setMerge(true);
+			if (h.getTestDirectory() != null) {
+				instrTask instr = (instrTask) task.createInstr();
+				instr.setMerge(true);
 
-			ModeAttribute mode = new ModeAttribute();
-			mode.setValue("overwrite");
-			instr.setMode(mode);
+				File metaData = analysis.createReportFileHandle("metadata_"
+						+ h.getSourceDirectory().getAbsolutePath().hashCode()
+						+ ".emma");
 
-			File metaData = analysis.createReportFileHandle("metadata_"
-					+ h.getSourceDirectory().getAbsolutePath().hashCode()
-					+ ".emma");
+				ModeAttribute mode = new ModeAttribute();
+				mode.setValue("overwrite");
+				instr.setMode(mode);
 
-			instr.setMetadatafile(metaData);
-			instr.setInstrpath(new Path(project, h.getBuildDirectory().getAbsolutePath()));
+				instr.setMetadatafile(metaData);
+				instr.setInstrpath(new Path(project, h.getBuildDirectory()
+						.getAbsolutePath()));
 
-			if (getFilter() != null) {
-				filterElement filt = instr.createFilter();
-				filt.setIncludes(getFilter());
+				// if (getFilter() != null) {
+				// filterElement filt = instr.createFilter();
+				// filt.setIncludes(getFilter());
+				// }
+
+				metaDatas.add(metaData);
+				System.out.println("added meta " + metaData);
 			}
-
-			metaDatas.add(metaData);
 
 		}
 
@@ -79,6 +84,9 @@ public class Emma extends AbstractAnalysisTool {
 
 		reportTask report = (reportTask) task.createReport();
 
+		File hand = analysis.createReportFileHandle("coverage.emma");
+		report.addInfileset(createFileset(hand));
+
 		for (File f : metaDatas) {
 			report.addInfileset(createFileset(f));
 		}
@@ -93,6 +101,11 @@ public class Emma extends AbstractAnalysisTool {
 
 
 		task.perform();
+
+		for (File f : metaDatas) {
+			f.deleteOnExit();
+		}
+		hand.deleteOnExit();
 
 	}
 

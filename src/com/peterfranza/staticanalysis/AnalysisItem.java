@@ -73,6 +73,10 @@ public class AnalysisItem extends Task {
 		holder.clsDirectory = getProject().resolveFile(buildDirectory);
 	}
 
+	public void setTestdir(String td) {
+		holder.testDirectory = getProject().resolveFile(td);
+	}
+
 	public void addDirset(DirSet dirSet) {
 		// for some reason a null check on dirSet won't work here so we have to
 		// keep a boolean tracking calls to this method
@@ -122,6 +126,8 @@ public class AnalysisItem extends Task {
 
 		/** The cls directory. */
 		private File clsDirectory;
+
+		private File testDirectory;
 
 		/** Both source and cls directories */
 		private DirSet dirSet;
@@ -179,6 +185,10 @@ public class AnalysisItem extends Task {
 		 */
 		public DirSet getDirSet() {
 			return dirSet;
+		}
+
+		public File getTestDirectory() {
+			return testDirectory;
 		}
 
 	}
