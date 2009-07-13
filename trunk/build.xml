@@ -1,7 +1,8 @@
 <project name="Analysis" default="analyze">
 		
-	<property name="product.version" value="0.9.1"/>
+	<property name="product.version" value="0.9.8"/>
 	<property name="src.dir" value="${basedir}/src"/>
+	<property name="test.dir" value="${basedir}/tests"/>
 	<property name="classes.dir" value="${basedir}/classes"/>
 	<property name="jar.name" value="jAnalysisSuite-${product.version}.jar" />
 	
@@ -11,7 +12,7 @@
 		<delete file="${jar.name}" failonerror="false"/>
 		<mkdir dir="${classes.dir}"/>
 		
-	    <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true"
+	    <javac srcdir="${src.dir}:${test.dir}" destdir="${classes.dir}" debug="true"
 	         includes="**/*.java" classpathref="build.classpath">
 	    	<classpath>
 	    		  <path id="build.classpath">
@@ -50,7 +51,7 @@
                 </dirset>
 	        </addAnalysisItem>
         -->
-        <addAnalysisItem srcdir="${src.dir}" builddir="${classes.dir}" />
+        <addAnalysisItem srcdir="${src.dir}" builddir="${classes.dir}" testdir="tests"/>
 		
 	        <!-- run the analysis -->
 	        <performStaticAnalysis  todir="reports" basename="report_">
@@ -59,8 +60,10 @@
 	        	<jdepend />
 	        	<testabilityexplorer />
 	        	<pmd/>
-	        	<findbugs />	    
-	        	<emma filter="com.orci.*"/>
+	        	<findbugs />
+	        	<emma filter="com.peterfranza.*"/>
+	        	<JUnit />
+	        	
 	        </performStaticAnalysis>
 		
 	</target>
