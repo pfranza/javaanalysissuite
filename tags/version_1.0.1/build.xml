@@ -1,0 +1,72 @@
+<project name="Analysis" default="analyze">
+		
+	<property name="product.version" value="1.0.1"/>
+	<property name="src.dir" value="${basedir}/src"/>
+	<property name="test.dir" value="${basedir}/tests"/>
+	<property name="classes.dir" value="${basedir}/classes"/>
+	<property name="jar.name" value="jAnalysisSuite-${product.version}.jar" />
+	
+	<target name="compile">
+		
+		<delete dir="${classes.dir}" failonerror="false"/>
+		<delete file="${jar.name}" failonerror="false"/>
+		<mkdir dir="${classes.dir}"/>
+		
+	    <javac srcdir="${src.dir}:${test.dir}" destdir="${classes.dir}" debug="true"
+	         includes="**/*.java" classpathref="build.classpath">
+	    	<classpath>
+	    		  <path id="build.classpath">
+	    		       <fileset dir="libs">
+	    		          <include name="**/*.jar"/>
+	    		       </fileset>
+	    		    </path>
+	    	</classpath>
+		</javac>
+		
+		<copy todir="${classes.dir}">
+			<fileset dir="${src.dir}">
+			  <exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+		
+		<jar destfile="${jar.name}">
+		  <fileset dir="${classes.dir}"/>
+		  <fileset dir="libs"/>
+		</jar>
+					
+	</target>
+	
+	<target name="analyze" depends="compile">
+	      <taskdef resource="staticanalysis.properties" classpath="${jar.name}"/>               
+	        <setupAnalysis jar="${jar.name}" quiet="true"/>
+	        
+	    <!-- add individual parts of the project to the batch -->
+        <!--
+	        <addAnalysisItem>
+                <dirset dir=".">
+                    <include name="src/**" />
+                    <include name="classes/**" />
+                    <exclude name="src/**/tools" />
+                    <exclude name="classes/**/tools" />
+                </dirset>
+	        </addAnalysisItem>
+        -->
+        <addAnalysisItem srcdir="${src.dir}" builddir="${classes.dir}" testdir="tests"/>
+		
+	        <!-- run the analysis -->
+	        <performStaticAnalysis  todir="reports" basename="report_">
+	        	<checkstyle/>
+	        	<cpd/>
+	        	<jdepend />
+	        	<javancss />
+	        	<testabilityexplorer />
+	        	<pmd/>
+	        	<findbugs />
+	        	<emma filter="com.peterfranza.*"/>
+	        	<JUnit />
+	        	
+	        </performStaticAnalysis>
+		
+	</target>
+	
+</project>
