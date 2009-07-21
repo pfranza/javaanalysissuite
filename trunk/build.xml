@@ -12,7 +12,7 @@
 		<delete file="${jar.name}" failonerror="false"/>
 		<mkdir dir="${classes.dir}"/>
 		
-	    <javac srcdir="${src.dir}:${test.dir}" destdir="${classes.dir}" debug="true"
+	    <javac source="1.5" srcdir="${src.dir}:${test.dir}" destdir="${classes.dir}" debug="true"
 	         includes="**/*.java" classpathref="build.classpath">
 	    	<classpath>
 	    		  <path id="build.classpath">
