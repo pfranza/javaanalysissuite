@@ -18,7 +18,7 @@
         <module name="EmptyBlock"/>
         <module name="EmptyForIteratorPad"/>
         <module name="EqualsHashCode"/>
-        <module name="FileLength"/>
+        
         <module name="IllegalImport"/>
         <module name="IllegalInstantiation"/>
         <module name="IllegalThrows"/>

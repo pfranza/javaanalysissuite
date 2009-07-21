@@ -110,7 +110,13 @@ public class AnalysisDef extends Taskdef {
 	private File extractToTemp(File jarFile) throws IOException {
 
 		final File tempdir = new File(System.getProperty("java.io.tmpdir"));
-		final File temp = new File(tempdir, "analysis");
+		final File temp = new File(tempdir, "analysis_"
+				+ jarFile.getName().hashCode());
+
+		if (!quiet) {
+			System.out.println("Using Temp File: " + temp);
+		}
+
 		Analysis.createFolder(temp);
 		boolean noTimeCompare = false;
 		final JarFile jar = new JarFile(jarFile);
