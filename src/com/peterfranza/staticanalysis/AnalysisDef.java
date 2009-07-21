@@ -111,7 +111,7 @@ public class AnalysisDef extends Taskdef {
 
 		final File tempdir = new File(System.getProperty("java.io.tmpdir"));
 		final File temp = new File(tempdir, "analysis_"
-				+ jarFile.getName().hashCode());
+				+ jarFile.getAbsolutePath().hashCode());
 
 		if (!quiet) {
 			System.out.println("Using Temp File: " + temp);
