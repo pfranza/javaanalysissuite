@@ -31,8 +31,8 @@ import com.puppycrawl.tools.checkstyle.CheckStyleTask.FormatterType;
  */
 public class CheckStyle extends AbstractAnalysisTool {
 
-	private String report = "checkstyle.xml";
-	private File configFile = new File("libs/checkstyle/checkstyle_checks.xml");
+	private final String report = "checkstyle.xml";
+	private File configFile;
 
 
 	/* (non-Javadoc)
@@ -59,7 +59,12 @@ public class CheckStyle extends AbstractAnalysisTool {
 		format.setTofile(analysis.createReportFileHandle(report));
 
 
-		task.setConfig(configFile);
+		if (configFile != null) {
+			task.setConfig(configFile);
+		} else {
+			task.setConfig(new File(analysis.getLibraryRoot(),
+					"checkstyle/checkstyle_checks.xml").getAbsoluteFile());
+		}
 
 		task.setFailOnViolation(false);
 		task.addFormatter(format);
