@@ -1,10 +1,16 @@
 <project name="Analysis" default="analyze">
 		
-	<property name="product.version" value="1.0.2"/>
+	<property name="product.version" value="1.0.3"/>
 	<property name="src.dir" value="${basedir}/src"/>
 	<property name="test.dir" value="${basedir}/tests"/>
 	<property name="classes.dir" value="${basedir}/classes"/>
 	<property name="jar.name" value="jAnalysisSuite-${product.version}.jar" />
+	
+    <path id="build.classpath">
+          <fileset dir="libs">
+             <include name="**/*.jar"/>
+          </fileset>
+     </path>
 	
 	<target name="compile">
 		
@@ -14,13 +20,6 @@
 		
 	    <javac target="1.5" srcdir="${src.dir}:${test.dir}" destdir="${classes.dir}" debug="true"
 	         includes="**/*.java" classpathref="build.classpath">
-	    	<classpath>
-	    		  <path id="build.classpath">
-	    		       <fileset dir="libs">
-	    		          <include name="**/*.jar"/>
-	    		       </fileset>
-	    		    </path>
-	    	</classpath>
 		</javac>
 		
 		<copy todir="${classes.dir}">
@@ -63,8 +62,7 @@
 	        	<pmd/>
 	        	<findbugs />
 	        	<emma filter="com.peterfranza.*"/>
-	        	<JUnit />
-	        	
+	        	<JUnit classpathref="build.classpath"/>	        	
 	        </performStaticAnalysis>
 		
 	</target>
