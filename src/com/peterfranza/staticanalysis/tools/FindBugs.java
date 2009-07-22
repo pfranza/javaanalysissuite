@@ -50,6 +50,9 @@ public class FindBugs extends AbstractAnalysisTool {
 		task.setEffort(effort);
 		task.setExcludeFilter(excludes);
 
+		if (analysis.getAuxRef() != null) {
+			task.setAuxClasspathRef(analysis.getAuxRef());
+		}
 
 		for (AnalysisHolder item : items) {
 			if (item.useDirSet()) {

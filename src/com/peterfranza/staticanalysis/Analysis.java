@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.Reference;
 
 import com.peterfranza.staticanalysis.tools.AnalysisToolInterface;
 import com.peterfranza.staticanalysis.tools.CheckStyle;
@@ -48,6 +49,8 @@ public class Analysis extends Task {
 	/** The parent. */
 	private File parent;
 
+	private Reference auxRef;
+
 	/**
 	 * Sets the basename.
 	 * 
@@ -66,6 +69,9 @@ public class Analysis extends Task {
 		this.parent = parent;
 	}
 
+	public void setClasspathRef(Reference r) {
+		auxRef = r;
+	}
 
 	/* (non-Javadoc)
 	 * @see org.apache.tools.ant.Task#init()
@@ -181,5 +187,8 @@ public class Analysis extends Task {
 		}
 	}
 
+	public synchronized final Reference getAuxRef() {
+		return auxRef;
+	}
 
 }

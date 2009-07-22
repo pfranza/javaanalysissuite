@@ -1,7 +1,6 @@
 package com.peterfranza.staticanalysis.tools;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.tools.ant.Project;
@@ -12,7 +11,6 @@ import org.apache.tools.ant.taskdefs.optional.junit.FormatterElement.TypeAttribu
 import org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.ForkMode;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
 
 import com.peterfranza.staticanalysis.Analysis;
 import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
@@ -22,7 +20,6 @@ extends AbstractAnalysisTool {
 
 	private String includes = "**/*Test.java";
 
-	private final List<Reference> refs = new ArrayList<Reference>();
 	private String forkMode = ForkMode.ONCE;
 	private boolean fork = true;
 
@@ -63,8 +60,8 @@ extends AbstractAnalysisTool {
 
 			task.createClasspath().add(cp);
 
-			for (Reference r : refs) {
-				task.createClasspath().setRefid(r);
+			if (analysis.getAuxRef() != null) {
+				task.createClasspath().setRefid(analysis.getAuxRef());
 			}
 
 			File results = analysis.createReportFileHandle("test_results");
@@ -104,9 +101,7 @@ extends AbstractAnalysisTool {
 		return includes;
 	}
 
-	public void setClasspathRef(Reference r) {
-		refs.add(r);
-	}
+
 
 	public synchronized final void setFork(boolean fork) {
 		this.fork = fork;
