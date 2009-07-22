@@ -1,6 +1,7 @@
 package com.peterfranza.staticanalysis.tools;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.tools.ant.Project;
@@ -10,6 +11,7 @@ import org.apache.tools.ant.taskdefs.optional.junit.JUnitTask;
 import org.apache.tools.ant.taskdefs.optional.junit.FormatterElement.TypeAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
 
 import com.peterfranza.staticanalysis.Analysis;
 import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
@@ -17,6 +19,12 @@ import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
 public class JUnit extends AbstractAnalysisTool {
 
 	private String includes = "**/*Test.java";
+
+	private final List<Reference> refs = new ArrayList<Reference>();
+
+	public void setClasspathRef(Reference r) {
+		refs.add(r);
+	}
 
 	public void analyze(Analysis analysis, Project project,
 			List<AnalysisHolder> items) {
@@ -44,6 +52,7 @@ public class JUnit extends AbstractAnalysisTool {
 
 			task.addFormatter(format);
 
+
 			FileSet cfs = new FileSet();
 			cfs.setDir(analysis.getLibraryRoot());
 			cfs.setIncludes("**/*.jar");
@@ -54,6 +63,9 @@ public class JUnit extends AbstractAnalysisTool {
 
 			task.createClasspath().add(cp);
 
+			for (Reference r : refs) {
+				task.createClasspath().setRefid(r);
+			}
 
 			File results = analysis.createReportFileHandle("test_results");
 			results.mkdirs();
