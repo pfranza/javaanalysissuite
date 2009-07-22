@@ -53,7 +53,9 @@
         <addAnalysisItem srcdir="${src.dir}" builddir="${classes.dir}" testdir="tests"/>
 		
 	        <!-- run the analysis -->
-	        <performStaticAnalysis  todir="reports" basename="report_">
+	        <performStaticAnalysis  todir="reports" 
+	        	basename="report_" classpathref="build.classpath">
+	        	
 	        	<checkstyle/>
 	        	<cpd/>
 	        	<jdepend />
@@ -62,7 +64,7 @@
 	        	<pmd/>
 	        	<findbugs />
 	        	<emma filter="com.peterfranza.*"/>
-	        	<JUnit classpathref="build.classpath"/>	        	
+	        	<JUnit />	        	
 	        </performStaticAnalysis>
 		
 	</target>
