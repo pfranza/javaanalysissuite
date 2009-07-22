@@ -24,7 +24,7 @@ extends AbstractAnalysisTool {
 
 	private final List<Reference> refs = new ArrayList<Reference>();
 	private String forkMode = ForkMode.ONCE;
-	private boolean fork;
+	private boolean fork = true;
 
 	public void analyze(Analysis analysis, Project project,
 			List<AnalysisHolder> items) {
