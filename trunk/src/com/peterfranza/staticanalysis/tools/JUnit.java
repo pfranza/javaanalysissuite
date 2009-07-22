@@ -9,6 +9,7 @@ import org.apache.tools.ant.taskdefs.optional.junit.BatchTest;
 import org.apache.tools.ant.taskdefs.optional.junit.FormatterElement;
 import org.apache.tools.ant.taskdefs.optional.junit.JUnitTask;
 import org.apache.tools.ant.taskdefs.optional.junit.FormatterElement.TypeAttribute;
+import org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.ForkMode;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -16,15 +17,14 @@ import org.apache.tools.ant.types.Reference;
 import com.peterfranza.staticanalysis.Analysis;
 import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
 
-public class JUnit extends AbstractAnalysisTool {
+public class JUnit
+extends AbstractAnalysisTool {
 
 	private String includes = "**/*Test.java";
 
 	private final List<Reference> refs = new ArrayList<Reference>();
-
-	public void setClasspathRef(Reference r) {
-		refs.add(r);
-	}
+	private String forkMode = ForkMode.ONCE;
+	private boolean fork;
 
 	public void analyze(Analysis analysis, Project project,
 			List<AnalysisHolder> items) {
@@ -40,7 +40,8 @@ public class JUnit extends AbstractAnalysisTool {
 					.getAbsolutePath());
 
 			task.setHaltonfailure(false);
-			task.setFork(true);
+			task.setFork(fork);
+			task.setForkMode(new ForkMode(forkMode));
 			task.setShowOutput(true);
 
 			FormatterElement format = new FormatterElement();
@@ -51,7 +52,6 @@ public class JUnit extends AbstractAnalysisTool {
 			});
 
 			task.addFormatter(format);
-
 
 			FileSet cfs = new FileSet();
 			cfs.setDir(analysis.getLibraryRoot());
@@ -104,9 +104,20 @@ public class JUnit extends AbstractAnalysisTool {
 		return includes;
 	}
 
+	public void setClasspathRef(Reference r) {
+		refs.add(r);
+	}
+
+	public synchronized final void setFork(boolean fork) {
+		this.fork = fork;
+	}
+
+	public synchronized final void setForkMode(String forkMode) {
+		this.forkMode = forkMode;
+	}
+
 	public synchronized final void setIncludes(String includes) {
 		this.includes = includes;
 	}
 
 }
-
