@@ -35,12 +35,11 @@ public class Emma extends AbstractAnalysisTool {
 		verbosity.setValue("quiet");
 		task.setVerbosity(verbosity);
 
-
-
 		for (AnalysisHolder h : items) {
 
 			if (h.getTestDirectory() != null) {
 				instrTask instr = (instrTask) task.createInstr();
+
 				instr.setMerge(true);
 
 				File metaData = analysis.createReportFileHandle("metadata_"
@@ -52,6 +51,9 @@ public class Emma extends AbstractAnalysisTool {
 				instr.setMode(mode);
 
 				instr.setMetadatafile(metaData);
+
+				instr.setOutdir(h.getBuildDirectory());
+
 				instr.setInstrpath(new Path(project, h.getBuildDirectory()
 						.getAbsolutePath()));
 
@@ -73,6 +75,12 @@ public class Emma extends AbstractAnalysisTool {
 	@Override
 	public void postAnalyze(Analysis analysis, Project project,
 			List<AnalysisHolder> items) {
+
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
 		emmaTask task = new emmaTask();
 		task.setProject(project);
@@ -106,7 +114,7 @@ public class Emma extends AbstractAnalysisTool {
 		for (File f : metaDatas) {
 			f.deleteOnExit();
 		}
-		hand.deleteOnExit();
+		// hand.deleteOnExit();
 
 	}
 

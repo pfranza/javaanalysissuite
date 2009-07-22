@@ -11,6 +11,7 @@ import org.apache.tools.ant.taskdefs.optional.junit.FormatterElement.TypeAttribu
 import org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.ForkMode;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Commandline.Argument;
 
 import com.peterfranza.staticanalysis.Analysis;
 import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
@@ -86,6 +87,16 @@ extends AbstractAnalysisTool {
 				}
 
 			}
+
+			File coverageFile = analysis
+			.createReportFileHandle("coverage.emma");
+
+			// Argument arg1 = task.createJvmarg();
+			// arg1.setValue("-Demma.coverage.out.merge=true");
+
+			Argument arg2 = task.createJvmarg();
+			arg2.setValue("-Demma.coverage.out.file="
+					+ coverageFile.getAbsolutePath());
 
 			task.perform();
 
