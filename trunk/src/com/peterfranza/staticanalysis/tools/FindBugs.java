@@ -18,13 +18,17 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Path;
 
 import com.peterfranza.staticanalysis.Analysis;
+import com.peterfranza.staticanalysis.AnalysisDef;
 import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
+import com.peterfranza.staticanalysis.tools.util.DirectoryMD5Sum;
 
 import edu.umd.cs.findbugs.anttask.FindBugsTask;
+import edu.umd.cs.findbugs.anttask.UnionBugs;
 
 /**
  * The Class FindBugsTool.
@@ -45,43 +49,134 @@ public class FindBugs extends AbstractAnalysisTool {
 		if(!isIncremental()) {
 			performFullFindbugs(analysis, project, items);
 		} else {
-			
+
 			List<File> partialFiles = new ArrayList<File>();
-			
-			for (AnalysisHolder item : items) {				
+
+			for (AnalysisHolder item : items) {
 				if(isPartialFileStale(item)) {
 					performPartialFindbugs(analysis, project, item, items);
 				}
+
+				cleanStaleFiles(item);
 				partialFiles.add(getPartialFileHandle(item));
 			}
-			
+
 			File masterFile = analysis.createReportFileHandle("findbugs.xml");
-			mergePartialData(masterFile, partialFiles);
-			
-			throw new BuildException("Incremental findbugs not supported .. yet");
+			mergePartialData(project, masterFile, partialFiles);
+
 		}
 	}
 
+	private void cleanStaleFiles(AnalysisHolder item) {
+
+		Project p = new Project();
+		p.setBaseDir(item.getBuildDirectory());
+
+		FileSet fs = new FileSet();
+		fs.setProject(p);
+		fs.setDir(item.getBuildDirectory());
+		fs.setIncludes("**/findbugs_partial_*.xml.part");
+
+		File currentHandle = getPartialFileHandle(item);
+
+		for (String s : fs.getDirectoryScanner().getIncludedFiles()) {
+			File file = p.resolveFile(s);
+			if (!file.equals(currentHandle)) {
+				if (!AnalysisDef.isQuiet()) {
+					System.out.println("   Clean up stale file: " + file);
+				}
+				file.delete();
+			}
+		}
+
+	}
+
 	private boolean isPartialFileStale(AnalysisHolder item) {
-		// TODO Auto-generated method stub
-		//Check to see if bug db is stale
-		return false;
+		return !getPartialFileHandle(item).exists();
 	}
 
 	private void performPartialFindbugs(Analysis analysis, Project project,
 			AnalysisHolder item, List<AnalysisHolder> items) {
-		// TODO Auto-generated method stub
-		
+
+		if (!AnalysisDef.isQuiet()) {
+			System.out.println("     Analyzing: " + item.getBuildDirectory());
+		}
+
+		FindBugsTask task = new FindBugsTask();
+		task.setProject(project);
+		task.setHome(new File(analysis.getLibraryRoot(), "findbugs"));
+
+		task.setOutput("xml");
+		task.setOutputFile(getPartialFileHandle(item).getAbsolutePath());
+		task.setJvmargs("-Xmx" + maxMem);
+		task.setTimeout(Long.valueOf(timeout));
+		task.setEffort(effort);
+		task.setExcludeFilter(excludes);
+
+		Path auxPath = new Path(project);
+
+		if (analysis.getAuxRef() != null) {
+			auxPath.createPath().setRefid(analysis.getAuxRef());
+		}
+
+		for (AnalysisHolder h : items) {
+			auxPath.createPath().setLocation(h.getBuildDirectory());
+		}
+
+		task.setAuxClasspath(auxPath);
+
+		addDirectories(task, item.getSourceDirectory(), item
+				.getBuildDirectory());
+
+		task.perform();
+
 	}
 
 	private File getPartialFileHandle(AnalysisHolder item) {
-		// TODO Auto-generated method stub
-		return null;
+		return new File(item.getBuildDirectory(),
+				"findbugs_partial_"
+				+ getHash(item) + ".xml.part"
+		);
 	}
 
-	private void mergePartialData(File masterFile, List<File> partialFiles) {
-		// TODO Auto-generated method stub
-		
+	private String getHash(AnalysisHolder item) {
+		Project p = new Project();
+		p.setBaseDir(item.getBuildDirectory());
+
+		try {
+			return DirectoryMD5Sum.getHashForDirectory(p, item
+					.getBuildDirectory(), "**/*.class");
+		} catch (Exception e) {
+			System.err.println("Unable to compute hash for: "
+					+ item.getBuildDirectory());
+		}
+
+		return "" + System.currentTimeMillis();
+
+	}
+
+	private void mergePartialData(Project p, File masterFile,
+			List<File> partialFiles) {
+
+		UnionBugs union = new UnionBugs();
+		union.setProject(p);
+		union.setTo(masterFile.getAbsolutePath());
+
+		for (File f : partialFiles) {
+			FileSet s = new FileSet();
+			s.setProject(p);
+			s.setFile(f);
+
+			union.addFileset(s);
+		}
+
+		if (!AnalysisDef.isQuiet()) {
+			System.out.println("   Merging " + partialFiles.size()
+					+ " bug files");
+		}
+
+		union.perform();
+
 	}
 
 	private void performFullFindbugs(Analysis analysis, Project project,
@@ -158,7 +253,7 @@ public class FindBugs extends AbstractAnalysisTool {
 	public final void setIncremental(boolean incremental) {
 		this.incremental = incremental;
 	}
-	
-	
+
+
 
 }

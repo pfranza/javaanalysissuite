@@ -40,7 +40,7 @@ public class AnalysisDef extends Taskdef {
 	private File jarFile;
 
 	/** The quiet. */
-	private boolean quiet = true;
+	private static boolean quiet = true;
 
 	/* (non-Javadoc)
 	 * @see org.apache.tools.ant.taskdefs.Definer#execute()
@@ -227,6 +227,10 @@ public class AnalysisDef extends Taskdef {
 		}
 		println(" extracted.");
 		return noTimeCompare;
+	}
+
+	public static boolean isQuiet() {
+		return quiet;
 	}
 
 }
