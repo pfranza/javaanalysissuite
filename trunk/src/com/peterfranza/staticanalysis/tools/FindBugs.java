@@ -15,8 +15,10 @@
 package com.peterfranza.staticanalysis.tools;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 import com.peterfranza.staticanalysis.Analysis;
@@ -33,11 +35,56 @@ public class FindBugs extends AbstractAnalysisTool {
 	private String maxMem = "64m";
 	private String timeout = String.valueOf(20 * 60 * 1000);
 	private String effort = "min";
+	private boolean incremental;
 
 	/* (non-Javadoc)
 	 * @see com.peterfranza.staticanalysis.tools.AnalysisToolInterface#analyze(com.peterfranza.staticanalysis.Analysis, org.apache.tools.ant.Project, java.util.List)
 	 */
 	public void analyze(Analysis analysis, Project project,
+			List<AnalysisHolder> items) {
+		if(!isIncremental()) {
+			performFullFindbugs(analysis, project, items);
+		} else {
+			
+			List<File> partialFiles = new ArrayList<File>();
+			
+			for (AnalysisHolder item : items) {				
+				if(isPartialFileStale(item)) {
+					performPartialFindbugs(analysis, project, item, items);
+				}
+				partialFiles.add(getPartialFileHandle(item));
+			}
+			
+			File masterFile = analysis.createReportFileHandle("findbugs.xml");
+			mergePartialData(masterFile, partialFiles);
+			
+			throw new BuildException("Incremental findbugs not supported .. yet");
+		}
+	}
+
+	private boolean isPartialFileStale(AnalysisHolder item) {
+		// TODO Auto-generated method stub
+		//Check to see if bug db is stale
+		return false;
+	}
+
+	private void performPartialFindbugs(Analysis analysis, Project project,
+			AnalysisHolder item, List<AnalysisHolder> items) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private File getPartialFileHandle(AnalysisHolder item) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private void mergePartialData(File masterFile, List<File> partialFiles) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void performFullFindbugs(Analysis analysis, Project project,
 			List<AnalysisHolder> items) {
 		FindBugsTask task = new FindBugsTask();
 		task.setProject(project);
@@ -103,5 +150,15 @@ public class FindBugs extends AbstractAnalysisTool {
 	public void setEffort(String effort) {
 		this.effort = effort;
 	}
+
+	public final boolean isIncremental() {
+		return incremental;
+	}
+
+	public final void setIncremental(boolean incremental) {
+		this.incremental = incremental;
+	}
+	
+	
 
 }
