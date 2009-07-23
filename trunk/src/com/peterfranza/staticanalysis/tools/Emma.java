@@ -1,9 +1,14 @@
 package com.peterfranza.staticanalysis.tools;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
 
@@ -19,12 +24,69 @@ import com.vladium.emma.report.reportTask;
 
 public class Emma extends AbstractAnalysisTool {
 
+	public static void copyFile(File in, File out) throws IOException {
+		FileChannel inChannel = new FileInputStream(in).getChannel();
+		FileChannel outChannel = new FileOutputStream(out).getChannel();
+		try {
+			inChannel.transferTo(0, inChannel.size(), outChannel);
+		} catch (IOException e) {
+			throw e;
+		} finally {
+			if (inChannel != null) {
+				inChannel.close();
+			}
+			if (outChannel != null) {
+				outChannel.close();
+			}
+		}
+
+	}
+
 	private String filter;
+
 	private final List<File> metaDatas = new ArrayList<File>();
 
 	public void analyze(Analysis analysis, Project project,
 			List<AnalysisHolder> items) {
 
+		for (AnalysisHolder h : items) {
+
+			if (h.getTestDirectory() != null) {
+
+				int ident = h.getSourceDirectory().getAbsolutePath().hashCode();
+
+				File metaData = new File(h.getBuildDirectory(), "metadata_"
+						+ ident + ".emma");
+
+				if (!isInstrumented(metaData)) {
+					doInstrumentClasses(project, h, metaData);
+				}
+
+				File local = analysis.createReportFileHandle("metadata_"
+						+ ident + ".emma");
+				
+				metaDatas.add(local);
+				
+				try {
+					copyFile(metaData, local);
+				} catch (IOException e) {
+					throw new BuildException(e);
+				}
+
+			}
+
+		}
+
+	}
+
+	private XFileSet createFileset(File f) {
+		XFileSet fs = new XFileSet();
+		fs.setFile(f);
+		return fs;
+	}
+
+	private void doInstrumentClasses(Project project, AnalysisHolder h,
+			File metaData) {
 		emmaTask task = new emmaTask();
 		task.setProject(project);
 		task.init();
@@ -35,41 +97,35 @@ public class Emma extends AbstractAnalysisTool {
 		verbosity.setValue("quiet");
 		task.setVerbosity(verbosity);
 
-		for (AnalysisHolder h : items) {
+		instrTask instr = (instrTask) task.createInstr();
 
-			if (h.getTestDirectory() != null) {
-				instrTask instr = (instrTask) task.createInstr();
+		instr.setMerge(true);
 
-				instr.setMerge(true);
+		ModeAttribute mode = new ModeAttribute();
+		mode.setValue("overwrite");
+		instr.setMode(mode);
 
-				File metaData = analysis.createReportFileHandle("metadata_"
-						+ h.getSourceDirectory().getAbsolutePath().hashCode()
-						+ ".emma");
+		instr.setMetadatafile(metaData);
 
-				ModeAttribute mode = new ModeAttribute();
-				mode.setValue("overwrite");
-				instr.setMode(mode);
+		instr.setOutdir(h.getBuildDirectory());
 
-				instr.setMetadatafile(metaData);
+		instr.setInstrpath(new Path(project, h.getBuildDirectory()
+				.getAbsolutePath()));
 
-				instr.setOutdir(h.getBuildDirectory());
-
-				instr.setInstrpath(new Path(project, h.getBuildDirectory()
-						.getAbsolutePath()));
-
-				if (getFilter() != null) {
-					filterElement filt = instr.createFilter();
-					filt.setIncludes(getFilter());
-				}
-
-				metaDatas.add(metaData);
-
-			}
-
+		if (getFilter() != null) {
+			filterElement filt = instr.createFilter();
+			filt.setIncludes(getFilter());
 		}
 
 		task.perform();
+	}
 
+	public String getFilter() {
+		return filter;
+	}
+
+	private boolean isInstrumented(File metaData) {
+		return metaData.exists();
 	}
 
 	@Override
@@ -102,34 +158,24 @@ public class Emma extends AbstractAnalysisTool {
 
 		report.createXml().setOutfile(
 				analysis.createReportFileHandle("coverage.xml")
-				.getAbsolutePath());
+						.getAbsolutePath());
 
 		report.createHtml().setOutfile(
 				analysis.createReportFileHandle("coverage.html")
-				.getAbsolutePath());
-
+						.getAbsolutePath());
 
 		task.perform();
 
 		for (File f : metaDatas) {
 			f.deleteOnExit();
 		}
-		// hand.deleteOnExit();
 
-	}
+		hand.deleteOnExit();
 
-	private XFileSet createFileset(File f) {
-		XFileSet fs = new XFileSet();
-		fs.setFile(f);
-		return fs;
 	}
 
 	public void setFilter(String filter) {
 		this.filter = filter;
-	}
-
-	public String getFilter() {
-		return filter;
 	}
 
 }
