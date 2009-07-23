@@ -132,11 +132,8 @@ public class Emma extends AbstractAnalysisTool {
 	public void postAnalyze(Analysis analysis, Project project,
 			List<AnalysisHolder> items) {
 
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		File hand = analysis.createReportFileHandle("coverage.emma");
+		waitForFile(10000, hand);
 
 		emmaTask task = new emmaTask();
 		task.setProject(project);
@@ -149,7 +146,7 @@ public class Emma extends AbstractAnalysisTool {
 
 		reportTask report = (reportTask) task.createReport();
 
-		File hand = analysis.createReportFileHandle("coverage.emma");
+		
 		report.addInfileset(createFileset(hand));
 
 		for (File f : metaDatas) {
@@ -171,6 +168,22 @@ public class Emma extends AbstractAnalysisTool {
 		}
 
 		hand.deleteOnExit();
+
+	}
+
+	private void waitForFile(int maxTime, File hand) {
+		
+		int timeWaited = 0;
+		while(timeWaited < maxTime && !hand.exists()) {
+
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			timeWaited += 100;
+		}
 
 	}
 
