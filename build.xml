@@ -1,6 +1,6 @@
 <project name="Analysis" default="analyze">
 		
-	<property name="product.version" value="1.0.3"/>
+	<property name="product.version" value="1.0.4"/>
 	<property name="src.dir" value="${basedir}/src"/>
 	<property name="test.dir" value="${basedir}/tests"/>
 	<property name="classes.dir" value="${basedir}/classes"/>
