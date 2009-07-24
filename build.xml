@@ -40,30 +40,22 @@
 	        <setupAnalysis jar="${jar.name}" quiet="true"/>
 	        
 	    <!-- add individual parts of the project to the batch -->
-        <!--
-	        <addAnalysisItem>
-                <dirset dir=".">
-                    <include name="src/**" />
-                    <include name="classes/**" />
-                    <exclude name="src/**/tools" />
-                    <exclude name="classes/**/tools" />
-                </dirset>
-	        </addAnalysisItem>
-        -->
         <addAnalysisItem srcdir="${src.dir}" builddir="${classes.dir}" testdir="tests"/>
 		
 	        <!-- run the analysis -->
 	        <performStaticAnalysis  todir="reports" 
-	        	basename="report_" classpathref="build.classpath">
+	        	basename="report_" 
+	        	classpathref="build.classpath"
+				filter="com.peterfranza.*" >
 	        	
-	        	<checkstyle/>
-	        	<cpd/>
+	        	<checkstyle />
+	        	<cpd />
 	        	<jdepend />
 	        	<javancss />
 	        	<testabilityexplorer />
-	        	<pmd/>
+	        	<pmd />
 	        	<findbugs />
-	        	<emma filter="com.peterfranza.*"/>
+	        	<emma />
 	        	<JUnit />	        	
 	        </performStaticAnalysis>
 		

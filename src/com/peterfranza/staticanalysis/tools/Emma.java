@@ -42,7 +42,7 @@ public class Emma extends AbstractAnalysisTool {
 
 	}
 
-	private String filter;
+	
 
 	private final List<File> metaDatas = new ArrayList<File>();
 
@@ -59,7 +59,7 @@ public class Emma extends AbstractAnalysisTool {
 						+ ident + ".emma");
 
 				if (!isInstrumented(metaData)) {
-					doInstrumentClasses(project, h, metaData);
+					doInstrumentClasses(analysis.getFilter(), project, h, metaData);
 				}
 
 				File local = analysis.createReportFileHandle("metadata_"
@@ -85,7 +85,7 @@ public class Emma extends AbstractAnalysisTool {
 		return fs;
 	}
 
-	private void doInstrumentClasses(Project project, AnalysisHolder h,
+	private void doInstrumentClasses(String filter, Project project, AnalysisHolder h,
 			File metaData) {
 		emmaTask task = new emmaTask();
 		task.setProject(project);
@@ -112,17 +112,15 @@ public class Emma extends AbstractAnalysisTool {
 		instr.setInstrpath(new Path(project, h.getBuildDirectory()
 				.getAbsolutePath()));
 
-		if (getFilter() != null) {
+		if (filter != null) {
 			filterElement filt = instr.createFilter();
-			filt.setIncludes(getFilter());
+			filt.setIncludes(filter);
 		}
 
 		task.perform();
 	}
 
-	public String getFilter() {
-		return filter;
-	}
+
 
 	private boolean isInstrumented(File metaData) {
 		return metaData.exists();
@@ -187,8 +185,6 @@ public class Emma extends AbstractAnalysisTool {
 
 	}
 
-	public void setFilter(String filter) {
-		this.filter = filter;
-	}
+
 
 }
