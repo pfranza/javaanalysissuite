@@ -50,6 +50,8 @@ public class Analysis extends Task {
 	private File parent;
 
 	private Reference auxRef;
+	
+	private String filter;
 
 	/**
 	 * Sets the basename.
@@ -189,6 +191,14 @@ public class Analysis extends Task {
 
 	public synchronized final Reference getAuxRef() {
 		return auxRef;
+	}
+	
+	public void setFilter(String filter) {
+		this.filter = filter;
+	}
+	
+	public String getFilter() {
+		return filter;
 	}
 
 }

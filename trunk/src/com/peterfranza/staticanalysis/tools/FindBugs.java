@@ -38,7 +38,7 @@ public class FindBugs extends AbstractAnalysisTool {
 	private File excludes;
 	private String maxMem = "64m";
 	private String timeout = String.valueOf(20 * 60 * 1000);
-	private String effort = "min";
+	private String effort = "max";
 	private boolean incremental;
 
 	/* (non-Javadoc)
@@ -112,6 +112,10 @@ public class FindBugs extends AbstractAnalysisTool {
 		task.setTimeout(Long.valueOf(timeout));
 		task.setEffort(effort);
 		task.setExcludeFilter(excludes);
+		
+		if(analysis.getFilter() != null) {
+			task.setOnlyAnalyze(analysis.getFilter());
+		}
 
 		Path auxPath = new Path(project);
 
@@ -254,6 +258,9 @@ public class FindBugs extends AbstractAnalysisTool {
 		this.incremental = incremental;
 	}
 
+	public boolean isForkable() {
+		return false;
+	}
 
 
 }

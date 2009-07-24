@@ -68,6 +68,7 @@ public class CheckStyle extends AbstractAnalysisTool {
 
 		task.setFailOnViolation(false);
 		task.addFormatter(format);
+		
 		task.perform();
 	}
 

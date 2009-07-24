@@ -13,7 +13,6 @@ import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
 public class TestabilityExplorer extends AbstractAnalysisTool {
 
 	private final String resultsFile = "testabilityexplorer.xml";
-	private String filter;
 
 
 	public void analyze(Analysis analysis, Project project,
@@ -34,7 +33,7 @@ public class TestabilityExplorer extends AbstractAnalysisTool {
 			}
 		}
 
-		task.setFilter(filter);
+		task.setFilter(analysis.getFilter().replace(".*", ""));
 
 		task.perform();
 
@@ -45,14 +44,6 @@ public class TestabilityExplorer extends AbstractAnalysisTool {
 		path.setLocation(buildDirectory);
 
 		return path;
-	}
-
-	public synchronized final String getFilter() {
-		return filter;
-	}
-
-	public synchronized final void setFilter(String filter) {
-		this.filter = filter;
 	}
 
 }

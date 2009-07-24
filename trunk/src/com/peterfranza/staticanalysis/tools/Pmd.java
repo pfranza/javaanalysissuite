@@ -60,7 +60,7 @@ public class Pmd extends AbstractAnalysisTool {
 				task.addFileset(fileSet);
 			}
 		}
-
+		
 		Formatter format = new Formatter();
 		format.setToFile(analysis.createReportFileHandle(reportFile).getAbsoluteFile());
 		format.setType("xml");
