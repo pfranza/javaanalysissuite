@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Reference;
 
 import com.peterfranza.staticanalysis.Analysis;
 import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
@@ -33,6 +34,7 @@ public class CheckStyle extends AbstractAnalysisTool {
 
 	private final String report = "checkstyle.xml";
 	private File configFile;
+	private Reference classpathRef;
 
 
 	/* (non-Javadoc)
@@ -69,6 +71,10 @@ public class CheckStyle extends AbstractAnalysisTool {
 		task.setFailOnViolation(false);
 		task.addFormatter(format);
 		
+		if (classpathRef != null) {
+			task.setClasspathRef(classpathRef);
+		}
+		
 		task.perform();
 	}
 
@@ -81,6 +87,14 @@ public class CheckStyle extends AbstractAnalysisTool {
 	public void setConfig(File configFile) {
 		this.configFile = configFile;
 	}
-
+	
+	/**
+	 * Set a reference to additional classpath entries.  Used to work around
+	 * http://jira.codehaus.org/browse/MPCHECKSTYLE-20.
+	 * @param classpathRef to set
+	 */
+	public void setClasspathRef(Reference classpathRef) {
+		this.classpathRef = classpathRef;
+	}
 
 }
