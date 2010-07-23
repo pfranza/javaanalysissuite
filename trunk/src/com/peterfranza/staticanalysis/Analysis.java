@@ -52,8 +52,6 @@ public class Analysis extends Task {
 	private Reference auxRef;
 	
 	private String filter;
-	
-	private Reference csClasspathRef;
 
 	/**
 	 * Sets the basename.
@@ -201,22 +199,6 @@ public class Analysis extends Task {
 	
 	public String getFilter() {
 		return filter;
-	}
-	
-	/**
-	 * Set a reference to additional classpath entries to be used by the
-	 * checkstyle task.  Used to work around http://jira.codehaus.org/browse/MPCHECKSTYLE-20.
-	 * @param csRef reference to set
-	 */
-	public void setCheckstylePath(Reference csRef) {
-		csClasspathRef = csRef;
-	}
-	
-	/**
-	 * @return extra classpath for checkstyle
-	 */
-	public Reference getCheckstylePath() {
-		return csClasspathRef;
 	}
 
 }

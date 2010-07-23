@@ -19,8 +19,6 @@ import java.util.List;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
 
 import com.peterfranza.staticanalysis.Analysis;
 import com.peterfranza.staticanalysis.AnalysisItem.AnalysisHolder;
@@ -70,11 +68,6 @@ public class CheckStyle extends AbstractAnalysisTool {
 
 		task.setFailOnViolation(false);
 		task.addFormatter(format);
-		
-		Reference classpath = analysis.getCheckstylePath();
-		if (classpath != null) {
-			task.setClasspathRef(classpath);
-		}
 		
 		task.perform();
 	}
